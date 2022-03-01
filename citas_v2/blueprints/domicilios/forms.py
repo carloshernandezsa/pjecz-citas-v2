@@ -15,7 +15,7 @@ class DomicilioForm(FlaskForm):
     num_ext = StringField("Núm. Exterior", validators=[Optional()])
     num_int = StringField("Núm. Interior", validators=[Optional()])
     colonia = StringField("Colonia", validators=[Optional(), Length(max=256)])
-    cp = IntegerField('CP', validators=[DataRequired()])
+    cp = IntegerField("CP", validators=[DataRequired()])
     guardar = SubmitField("Guardar")
 
 
@@ -26,5 +26,5 @@ class DomicilioSearchForm(FlaskForm):
     municipio = StringField("Municipio", validators=[Optional(), Length(max=64)])
     calle = StringField("Calle", validators=[Optional(), Length(max=256)])
     colonia = StringField("Colonia", validators=[Optional(), Length(max=256)])
-    cp = IntegerField('CP', validators=[Optional()])
+    cp = IntegerField("CP", validators=[Optional()])
     buscar = SubmitField("Buscar")

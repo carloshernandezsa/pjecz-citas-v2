@@ -61,12 +61,7 @@ class Usuario(db.Model, UserMixin, UniversalMixin):
         for usuario_rol in self.usuarios_roles:
             if usuario_rol.estatus == "A":
                 for permiso in usuario_rol.rol.permisos:
-                    if (
-                        permiso.modulo.nombre not in modulos_nombres
-                        and permiso.estatus == "A"
-                        and permiso.nivel > 0
-                        and permiso.modulo.en_navegacion
-                    ):
+                    if permiso.modulo.nombre not in modulos_nombres and permiso.estatus == "A" and permiso.nivel > 0 and permiso.modulo.en_navegacion:
                         modulos.append(permiso.modulo)
                         modulos_nombres.append(permiso.modulo.nombre)
         self.modulos_menu_principal_consultados = sorted(modulos, key=lambda x: x.nombre_corto)
