@@ -5,7 +5,7 @@ import os
 import re
 from sqlalchemy.sql import func
 from hashids import Hashids
-from plataforma_web.extensions import db
+from citas_v2.extensions import db
 
 hashids = Hashids(salt=os.environ.get("SALT", "Esta es una muy mala cadena aleatoria"), min_length=8)
 hashid_regexp = re.compile("[0-9a-zA-Z]{8}")

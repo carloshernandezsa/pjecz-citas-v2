@@ -1,0 +1,182 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/list.jinja2' as list %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Rol{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('Rol ' + rol.nombre) %}
+        {{ topbar.button_previous('Roles', url_for('roles.list_active')) }}
+        {% if current_user.can_edit('ROLES') %}
+            {{ topbar.button_edit('Editar', url_for('roles.edit', rol_id=rol.id)) }}
+            {% if rol.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('roles.delete', rol_id=rol.id)) }}{% endif %}
+            {% if rol.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('roles.recover', rol_id=rol.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card('Permisos') %}
+        <table id="permisos_datatable" class="table display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Nombres</th>
+                    <th>Modulos</th>
+                    <th>Niveles</th>
+                </tr>
+            </thead>
+        </table>
+        {% if current_user.can_insert('PERMISOS') %}
+        <a href="{{ url_for('permisos.new_with_rol', rol_id=rol.id) }}" class="btn btn-primary">Agregar</a>
+        {% endif %}
+    {% endcall %}
+    {% call detail.card('Usuarios') %}
+        <table id="usuarios_roles_datatable" class="table display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>e-mail</th>
+                    <th>Nombres completos</th>
+                    <th>Puestos</th>
+                </tr>
+            </thead>
+        </table>
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_edit('ROLES') %}
+        {% if rol.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar a ' + rol.nombre + '?') }}{% endif %}
+        {% if rol.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + rol.nombre + '?') }}{% endif %}
+    {% endif %}
+    {% if current_user.can_edit('PERMISOS') %}
+        {{ modals.custom_javascript('Eliminar', '¿Eliminar ese permiso del rol?', 'DeletePermiso') }}
+    {% endif %}
+    {% if current_user.can_edit('USUARIOS ROLES') %}
+        {{ modals.custom_javascript('Eliminar', '¿Eliminar ese usuario del rol?', 'DeleteUsuarioRol') }}
+    {% endif %}
+    <script>
+        $('#permisos_datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            ordering: false,
+            searching: false,
+            responsive: true,
+            scrollX: true,
+            ajax: {
+                url: "/permisos/datatable_json",
+                type: "POST",
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                dataType: "json",
+                dataSrc: "data",
+                data: {"estatus": "A", "rol_id": {{ rol.id }} }
+            },
+            columns: [
+                { data: "detalle" },
+                { data: "modulo" },
+                { data: "nivel" }
+            ],
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return '<a href="' + data.url + '">' + data.nombre + '</a>';
+                    }
+                },
+                {
+                    targets: 1,
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        if (data.url == '') {
+                            return data.nombre;
+                        } else {
+                            return '<a href="' + data.url + '">' + data.nombre + '</a>';
+                        }
+                    }
+                }
+            ],
+            language: {
+                lengthMenu: "Mostrar _MENU_",
+                search: "Filtrar:",
+                zeroRecords: "No se encontraron registros",
+                info: "Total de registros _TOTAL_ ",
+                infoEmpty: "No hay registros",
+                infoFiltered: "(_TOTAL_ filtrados de _MAX_ registros)",
+                oPaginate: {
+                    sFirst: "Primero",
+                    sLast: "Último",
+                    sNext: "Siguiente",
+                    sPrevious: "Anterior"
+                }
+            }
+        });
+    </script>
+    <script>
+        $('#usuarios_roles_datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            ordering: false,
+            searching: false,
+            responsive: true,
+            scrollX: true,
+            ajax: {
+                url: "/usuarios_roles/datatable_json",
+                type: "POST",
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                dataType: "json",
+                dataSrc: "data",
+                data: {"estatus": "A", "rol_id": {{ rol.id }} }
+            },
+            columns: [
+                { data: "detalle" },
+                { data: "usuario" },
+                { data: "usuario_nombre" },
+                { data: "usuario_puesto" }
+            ],
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return '<a href="' + data.url + '">' + data.id + '</a>';
+                    }
+                },
+                {
+                    targets: 1,
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        if (data.url == '') {
+                            return data.email;
+                        } else {
+                            return '<a href="' + data.url + '">' + data.email + '</a>';
+                        }
+                    }
+                },
+                {
+                    targets: [2, 3],
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return (data.length > 32 ? data.substr(0, 32) + '…' : data);
+                    }
+                }
+            ],
+            language: {
+                lengthMenu: "Mostrar _MENU_",
+                search: "Filtrar:",
+                zeroRecords: "No se encontraron registros",
+                info: "Total de registros _TOTAL_ ",
+                infoEmpty: "No hay registros",
+                infoFiltered: "(_TOTAL_ filtrados de _MAX_ registros)",
+                oPaginate: {
+                    sFirst: "Primero",
+                    sLast: "Último",
+                    sNext: "Siguiente",
+                    sPrevious: "Anterior"
+                }
+            }
+        });
+    </script>
+{% endblock %}

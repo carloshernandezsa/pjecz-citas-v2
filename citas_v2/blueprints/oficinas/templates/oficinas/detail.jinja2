@@ -1,0 +1,202 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Oficina{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('Oficina ' + oficina.clave) %}
+        {{ topbar.button_previous('Oficinas', url_for('oficinas.list_active')) }}
+        {% if current_user.can_edit('OFICINAS') %}
+            {{ topbar.button_edit('Editar', url_for('oficinas.edit', oficina_id=oficina.id)) }}
+            {% if oficina.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('oficinas.delete', oficina_id=oficina.id)) }}{% endif %}
+            {% if oficina.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('oficinas.recover', oficina_id=oficina.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=oficina.estatus) %}
+        {{ detail.label_value_big('Clave', oficina.clave) }}
+        {{ detail.label_value('Descripción', oficina.descripcion) }}
+        {{ detail.label_value('Descripción Corta', oficina.descripcion_corta) }}
+        {% if current_user.can_view('DISTRITOS') %}
+            {{ detail.label_value('Distrito', oficina.distrito.nombre, url_for('distritos.detail', distrito_id=oficina.distrito_id)) }}
+        {% else %}
+            {{ detail.label_value('Distrito', oficina.distrito.nombre) }}
+        {% endif %}
+        {% if current_user.can_view('DOMICILIOS') %}
+            {{ detail.label_value('Domicilio', oficina.domicilio.completo, url_for('domicilios.detail', domicilio_id=oficina.domicilio_id)) }}
+        {% else %}
+            {{ detail.label_value('Domicilio', oficina.domicilio.completo) }}
+        {% endif %}
+        {{ detail.label_value('Horario', oficina.apertura.strftime("%H:%M") + ' — ' + oficina.cierre.strftime("%H:%M")) }}
+        {{ detail.label_value('Límite de Personas', oficina.limite_personas) }}
+        {{ detail.label_value_boolean('Juridiccional', oficina.es_juridiccional) }}
+    {% endcall %}
+    {% if current_user.can_view('FUNCIONARIOS OFICINAS') %}
+        {% call detail.card('Funcionarios') %}
+            <table id="funcionarios_oficinas_datatable" class="table display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>CURP</th>
+                        <th>Nombres completos</th>
+                        <th>e-mail</th>
+                        <th>Puesto</th>
+                    </tr>
+                </thead>
+            </table>
+        {% endcall %}
+    {% endif %}
+    {% if current_user.can_view('USUARIOS') %}
+        {% call detail.card('Usuarios') %}
+            <table id="usuarios_datatable" class="table display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>e-mail</th>
+                        <th>Nombres Completos</th>
+                        <th>Puesto</th>
+                        <th>Autoridad</th>
+                    </tr>
+                </thead>
+            </table>
+        {% endcall %}
+    {% endif %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_edit('OFICINAS') %}
+        {% if oficina.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar ' + oficina.clave + '?') }}{% endif %}
+        {% if oficina.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar ' + oficina.clave + '?') }}{% endif %}
+    {% endif %}
+    {% if current_user.can_view('FUNCIONARIOS OFICINAS') %}
+        <script>
+            $('#funcionarios_oficinas_datatable').DataTable({
+                processing: true,
+                serverSide: true,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                scrollX: true,
+                ajax: {
+                    url: "/funcionarios_oficinas/datatable_json",
+                    type: "POST",
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                    dataType: "json",
+                    dataSrc: "data",
+                    data: { "estatus": "A", "oficina_id": {{ oficina.id }} }
+                },
+                columns: [
+                    { data: "detalle" },
+                    { data: "funcionario" },
+                    { data: "funcionario_nombre" },
+                    { data: "funcionario_email" },
+                    { data: "funcionario_puesto" }
+                ],
+                columnDefs: [
+                    {
+                        targets: 0,
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return '<a href="' + data.url + '">' + data.id + '</a>';
+                        }
+                    },
+                    {
+                        targets: 1,
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            if (data.url == '') {
+                                return data.curp;
+                            } else {
+                                return '<a href="' + data.url + '">' + data.curp + '</a>';
+                            }
+                        }
+                    }
+                ],
+                language: {
+                    lengthMenu: "Mostrar _MENU_",
+                    search: "Filtrar:",
+                    zeroRecords: "No se encontraron registros",
+                    info: "Total de registros _TOTAL_ ",
+                    infoEmpty: "No hay registros",
+                    infoFiltered: "(_TOTAL_ filtrados de _MAX_ registros)",
+                    oPaginate: {
+                        sFirst: "Primero",
+                        sLast: "Último",
+                        sNext: "Siguiente",
+                        sPrevious: "Anterior"
+                    }
+                }
+            });
+        </script>
+    {% endif %}
+    {% if current_user.can_view('USUARIOS') %}
+        <script>
+            $('#usuarios_datatable').DataTable({
+                processing: true,
+                serverSide: true,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                scrollX: true,
+                ajax: {
+                    url: "/usuarios/datatable_json",
+                    type: "POST",
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+                    dataType: "json",
+                    dataSrc: "data",
+                    data: {"estatus": "A", "oficina_id": {{ oficina.id }}}
+                },
+                columns: [
+                    { data: "detalle" },
+                    { data: "nombre" },
+                    { data: "puesto" },
+                    { data: "autoridad" }
+                ],
+                columnDefs: [
+                    {
+                        targets: 0,
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return '<a href="' + data.url + '">' + data.email + '</a>';
+                        }
+                    },
+                    {
+                        targets: [1, 2],
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return (data.length > 48 ? data.substr(0, 48) + '…' : data);
+                        }
+                    },
+                    {
+                        targets: 3,
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            if (data.url == '') {
+                                return data.clave;
+                            } else {
+                                return '<a href="' + data.url + '">' + data.clave + '</a>';
+                            }
+                        }
+                    }
+                ],
+                language: {
+                    lengthMenu: "Mostrar _MENU_",
+                    search: "Filtrar:",
+                    zeroRecords: "No se encontraron registros",
+                    info: "Total de registros _TOTAL_ ",
+                    infoEmpty: "No hay registros",
+                    infoFiltered: "(_TOTAL_ filtrados de _MAX_ registros)",
+                    oPaginate: {
+                        sFirst: "Primero",
+                        sLast: "Último",
+                        sNext: "Siguiente",
+                        sPrevious: "Anterior"
+                    }
+                }
+            });
+        </script>
+    {% endif %}
+{% endblock %}
