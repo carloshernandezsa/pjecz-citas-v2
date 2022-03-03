@@ -7,6 +7,11 @@ import rq
 from citas_v2.extensions import csrf, db, login_manager, moment
 
 from citas_v2.blueprints.autoridades.views import autoridades
+from citas_v2.blueprints.bitacoras.views import bitacoras
+from citas_v2.blueprints.cit_citas.views import cit_citas
+from citas_v2.blueprints.cit_citas_expedientes.views import cit_citas_expedientes
+from citas_v2.blueprints.cit_clientes.views import cit_clientes
+from citas_v2.blueprints.cit_dias_inhabiles.views import cit_dias_inhabiles
 from citas_v2.blueprints.distritos.views import distritos
 from citas_v2.blueprints.domicilios.views import domicilios
 from citas_v2.blueprints.entradas_salidas.views import entradas_salidas
@@ -19,6 +24,8 @@ from citas_v2.blueprints.sistemas.views import sistemas
 from citas_v2.blueprints.tareas.views import tareas
 from citas_v2.blueprints.usuarios.views import usuarios
 from citas_v2.blueprints.usuarios_roles.views import usuarios_roles
+
+from citas_v2.blueprints.usuarios.models import Usuario
 
 
 def create_app():
@@ -34,6 +41,11 @@ def create_app():
     app.task_queue = rq.Queue(app.config["TASK_QUEUE"], connection=app.redis, default_timeout=1920)
     # Cargar los blueprints
     app.register_blueprint(autoridades)
+    app.register_blueprint(bitacoras)
+    app.register_blueprint(cit_citas)
+    app.register_blueprint(cit_citas_expedientes)
+    app.register_blueprint(cit_clientes)
+    app.register_blueprint(cit_dias_inhabiles)
     app.register_blueprint(distritos)
     app.register_blueprint(domicilios)
     app.register_blueprint(entradas_salidas)
@@ -48,7 +60,7 @@ def create_app():
     app.register_blueprint(usuarios_roles)
     # Cargar las extensiones
     extensions(app)
-    # authentication(Usuario)
+    authentication(Usuario)
     # Entregar app
     return app
 
