@@ -5,9 +5,9 @@ from pathlib import Path
 import csv
 import click
 
-from citas_v2.blueprints.modulos.models import Modulo
-from citas_v2.blueprints.permisos.models import Permiso
-from citas_v2.blueprints.roles.models import Rol
+from citas_backend.blueprints.modulos.models import Modulo
+from citas_backend.blueprints.permisos.models import Permiso
+from citas_backend.blueprints.roles.models import Rol
 
 PERMISOS_CSV = "seed/roles_permisos.csv"
 

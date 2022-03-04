@@ -14,7 +14,7 @@ Crear entorno virtual python 3.8 o superior
 Crear archivo `.env` con las variables de entorno
 
     # Flask
-    FLASK_APP=citas_v2.app
+    FLASK_APP=citas_backend.app
     FLASK_DEBUG=1
     SECRET_KEY=****************
 
@@ -50,7 +50,7 @@ Crear archivo `instance/settings.py` con la configuracion para desarrollo
     # SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
 
     # SQLite
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///pjecz_citas_v2.sqlite3'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///pjecz_citas_backend.sqlite3'
 
 En Fedora o Debian crear archivo `.bashrc` para facilitar la carga de las variables y el entorno virtual desde Konsole
 

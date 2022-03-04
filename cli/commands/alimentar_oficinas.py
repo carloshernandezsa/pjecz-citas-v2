@@ -8,7 +8,7 @@ import click
 
 from lib.safe_string import safe_clave, safe_string
 
-from citas_v2.blueprints.oficinas.models import Oficina
+from citas_backend.blueprints.oficinas.models import Oficina
 
 OFICINAS_CSV = "seed/oficinas.csv"
 
