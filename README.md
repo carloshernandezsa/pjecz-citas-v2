@@ -50,7 +50,7 @@ Crear archivo `instance/settings.py` con la configuracion para desarrollo
     # SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
 
     # SQLite
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///pjecz_citas_backend.sqlite3'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///pjecz_citas_v2.sqlite3'
 
 En Fedora o Debian crear archivo `.bashrc` para facilitar la carga de las variables y el entorno virtual desde Konsole
 
@@ -94,4 +94,11 @@ En Fedora o Debian crear archivo `.bashrc` para facilitar la carga de las variab
     echo "   PGDATABASE: ${PGDATABASE}"
     echo "   PGPASSWORD: ${PGPASSWORD}"
     echo "   PGUSER:     ${PGUSER}"
+    echo
+
+    alias reiniciar="citas db reiniciar"
+    alias arrancar="flask run --port 5010"
+    echo "-- Aliases"
+    echo "   reiniciar: Reiniciar base de datos"
+    echo "   arrancar:  Arrancar Flask"
     echo
