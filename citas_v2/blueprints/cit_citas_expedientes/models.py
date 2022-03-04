@@ -15,8 +15,8 @@ class CitCitaExpediente(db.Model, UniversalMixin):
     id = db.Column(db.Integer, primary_key=True)
 
     # Clave foránea
-    cit_cita_id = db.Column(db.Integer, db.ForeignKey('cit_citas.id'), index=True, nullable=False)
-    cit_cita = db.relationship('CitCita', back_populates='cit_citas_expedientes')
+    cit_cita_id = db.Column(db.Integer, db.ForeignKey("cit_citas.id"), index=True, nullable=False)
+    cit_cita = db.relationship("CitCita", back_populates="cit_citas_expedientes")
 
     # Columnas
     expediente = db.Column(db.String(16), nullable=False)
