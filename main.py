@@ -1,7 +1,7 @@
 """
 Google Cloud App Engine toma main.py
 """
-from citas_v2 import app
+from citas_backend import app
 
 app = app.create_app()
 

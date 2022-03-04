@@ -5,7 +5,7 @@ from pathlib import Path
 import csv
 import click
 
-from citas_v2.blueprints.materias.models import Materia
+from citas_backend.blueprints.materias.models import Materia
 
 
 def respaldar_materias(salida: str = "materias.csv"):

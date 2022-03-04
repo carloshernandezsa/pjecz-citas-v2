@@ -9,8 +9,8 @@ Base de datos
 import os
 import click
 
-from citas_v2.app import create_app
-from citas_v2.extensions import db
+from citas_backend.app import create_app
+from citas_backend.extensions import db
 
 from cli.commands.alimentar_autoridades import alimentar_autoridades
 from cli.commands.alimentar_distritos import alimentar_distritos

@@ -5,7 +5,7 @@ from pathlib import Path
 import csv
 import click
 
-from citas_v2.blueprints.usuarios.models import Usuario
+from citas_backend.blueprints.usuarios.models import Usuario
 
 
 def respaldar_usuarios_roles(salida: str = "usuarios_roles.csv"):

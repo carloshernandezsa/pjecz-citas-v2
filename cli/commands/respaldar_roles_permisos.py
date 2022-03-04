@@ -5,8 +5,8 @@ from pathlib import Path
 import csv
 import click
 
-from citas_v2.blueprints.modulos.models import Modulo
-from citas_v2.blueprints.roles.models import Rol
+from citas_backend.blueprints.modulos.models import Modulo
+from citas_backend.blueprints.roles.models import Rol
 
 
 def respaldar_roles_permisos(salida: str = "roles_permisos.csv"):

@@ -7,7 +7,7 @@ import click
 
 from lib.safe_string import safe_string
 
-from citas_v2.blueprints.roles.models import Rol
+from citas_backend.blueprints.roles.models import Rol
 
 ROLES_CSV = "seed/roles_permisos.csv"
 

@@ -7,7 +7,7 @@ import click
 
 from lib.safe_string import safe_string
 
-from citas_v2.blueprints.domicilios.models import Domicilio
+from citas_backend.blueprints.domicilios.models import Domicilio
 
 DOMICILIOS_CSV = "seed/domicilios.csv"
 

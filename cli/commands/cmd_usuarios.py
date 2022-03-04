@@ -7,11 +7,11 @@ Usuarios
 """
 import click
 
-from citas_v2.app import create_app
-from citas_v2.extensions import db
+from citas_backend.app import create_app
+from citas_backend.extensions import db
 
-from citas_v2.blueprints.usuarios.models import Usuario
-from citas_v2.extensions import pwd_context
+from citas_backend.blueprints.usuarios.models import Usuario
+from citas_backend.extensions import pwd_context
 
 app = create_app()
 db.app = app
@@ -25,21 +25,21 @@ def cli():
 @click.command()
 def definir_oficinas():
     """Definir las oficinas a partir de una relacion entre email y oficina"""
-    app.task_queue.enqueue("citas_v2.blueprints.usuarios.tasks.definir_oficinas")
+    app.task_queue.enqueue("citas_backend.blueprints.usuarios.tasks.definir_oficinas")
     click.echo("Definir oficinas se está ejecutando en el fondo.")
 
 
 @click.command()
 def enviar_reporte():
     """Enviar via correo electronico el reporte"""
-    app.task_queue.enqueue("citas_v2.blueprints.usuarios.tasks.enviar_reporte")
+    app.task_queue.enqueue("citas_backend.blueprints.usuarios.tasks.enviar_reporte")
     click.echo("Enviar reporte se está ejecutando en el fondo.")
 
 
 @click.command()
 def estandarizar():
     """Estandarizar nombres, apellidos y puestos en mayusculas"""
-    app.task_queue.enqueue("citas_v2.blueprints.usuarios.tasks.estandarizar")
+    app.task_queue.enqueue("citas_backend.blueprints.usuarios.tasks.estandarizar")
     click.echo("Estandarizar se está ejecutando en el fondo.")
 
 
@@ -64,7 +64,7 @@ def nueva_contrasena(email):
 @click.command()
 def sincronizar():
     """Sincronizar con RRHH Personal"""
-    app.task_queue.enqueue("citas_v2.blueprints.usuarios.tasks.sincronizar")
+    app.task_queue.enqueue("citas_backend.blueprints.usuarios.tasks.sincronizar")
     click.echo("Sincronizar se está ejecutando en el fondo.")
 
 

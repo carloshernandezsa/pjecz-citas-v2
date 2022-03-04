@@ -14,7 +14,7 @@ Crear entorno virtual python 3.8 o superior
 Crear archivo `.env` con las variables de entorno
 
     # Flask
-    FLASK_APP=citas_v2.app
+    FLASK_APP=citas_backend.app
     FLASK_DEBUG=1
     SECRET_KEY=****************
 
@@ -94,4 +94,11 @@ En Fedora o Debian crear archivo `.bashrc` para facilitar la carga de las variab
     echo "   PGDATABASE: ${PGDATABASE}"
     echo "   PGPASSWORD: ${PGPASSWORD}"
     echo "   PGUSER:     ${PGUSER}"
+    echo
+
+    alias reiniciar="citas db reiniciar"
+    alias arrancar="flask run --port 5010"
+    echo "-- Aliases"
+    echo "   reiniciar: Reiniciar base de datos"
+    echo "   arrancar:  Arrancar Flask"
     echo

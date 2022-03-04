@@ -5,7 +5,7 @@ from pathlib import Path
 import csv
 import click
 
-from citas_v2.blueprints.autoridades.models import Autoridad
+from citas_backend.blueprints.autoridades.models import Autoridad
 
 
 def respaldar_autoridades(salida: str = "autoridades.csv"):
