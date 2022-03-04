@@ -238,7 +238,6 @@ def datatable_json():
                     "url": url_for("autoridades.detail", autoridad_id=resultado.autoridad_id) if current_user.can_view("AUTORIDADES") else "",
                 },
                 "oficina_clave": resultado.oficina.clave,
-                "workspace": resultado.workspace,
             }
         )
     # Entregar JSON
