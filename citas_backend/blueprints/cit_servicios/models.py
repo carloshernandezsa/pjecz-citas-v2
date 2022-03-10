@@ -7,10 +7,10 @@ from lib.universal_mixin import UniversalMixin
 
 
 class CITServicio(db.Model, UniversalMixin):
-    """ CITServicio """
+    """CITServicio"""
 
     # Nombre de la tabla
-    __tablename__ = 'cit_servicios'
+    __tablename__ = "cit_servicios"
 
     # Clave primaria
     id = db.Column(db.Integer, primary_key=True)
@@ -26,5 +26,5 @@ class CITServicio(db.Model, UniversalMixin):
     # Hijos
 
     def __repr__(self):
-        """ Representación """
-        return '<CIT_Servicios>'
+        """Representación"""
+        return "<CIT_Servicios>"
