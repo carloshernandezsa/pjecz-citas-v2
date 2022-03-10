@@ -60,6 +60,7 @@ def detail(servicio_id):
     servicio = CITServicio.query.get_or_404(servicio_id)
     return render_template("cit_servicios/detail.jinja2", servicio=servicio)
 
+
 @cit_servicios.route("/cit_servicios/nuevo", methods=["GET", "POST"])
 @login_required
 @permission_required(MODULO, Permiso.CREAR)
@@ -134,7 +135,7 @@ def edit(servicio_id):
     return render_template("cit_servicios/edit.jinja2", form=form, servicio=servicio)
 
 
-def _validar(form, same = False):
+def _validar(form, same=False):
     if not same:
         clave_existente = CITServicio.query.filter(CITServicio.clave == form.clave.data).first()
         if clave_existente:
