@@ -1,9 +1,11 @@
 """
 CITAS Días Inhábiles, vistas
 """
+import json
 
-from datetime import date, datetime, timedelta
-from dateutil.relativedelta import relativedelta
+from datetime import datetime, time
+
+from lib.datatables import get_datatable_parameters, output_datatable_json
 
 from flask import Blueprint, flash, redirect, request, render_template, url_for
 from flask_login import current_user, login_required
@@ -15,13 +17,43 @@ from citas_backend.blueprints.usuarios.decorators import permission_required
 
 from citas_backend.blueprints.bitacoras.models import Bitacora
 from citas_backend.blueprints.modulos.models import Modulo
-from citas_backend.blueprints.cit_servicios.models import CITServicio
+from citas_backend.blueprints.cit_servicios.models import CitServicio
+from citas_backend.blueprints.cit_servicios.forms import CitServiciosForm
 
-from citas_backend.blueprints.cit_servicios.forms import CITServiciosForm
+cit_servicios = Blueprint("cit_servicios", __name__, template_folder="templates")
 
 MODULO = "CIT SERVICIOS"
 
-cit_servicios = Blueprint("cit_servicios", __name__, template_folder="templates")
+
+@cit_servicios.route('/cit_servicios/datatable_json', methods=['GET', 'POST'])
+def datatable_json():
+    """DataTable JSON para listado de servicios"""
+    # Tomar parámetros de Datatables
+    draw, start, rows_per_page = get_datatable_parameters()
+    # Consultar
+    consulta = CitServicio.query
+    if 'estatus' in request.form:
+        consulta = consulta.filter_by(estatus=request.form['estatus'])
+    else:
+        consulta = consulta.filter_by(estatus='A')
+    registros = consulta.order_by(CitServicio.id).offset(start).limit(rows_per_page).all()
+    total = consulta.count()
+    # Elaborar datos para DataTable
+    data = []
+    for resultado in registros:
+        data.append(
+            {
+                'clave': {
+                    'texto': resultado.clave,
+                    'url': url_for('cit_servicios.detail', servicio_id=resultado.id),
+                },
+                'nombre': resultado.nombre,
+                'solicitar_expedientes': resultado.solicitar_expedientes,
+                'duracion': resultado.duracion.strftime("%H:%M"),
+            }
+        )
+    # Entregar JSON
+    return output_datatable_json(draw, total, data)
 
 
 @cit_servicios.route("/cit_servicios")
@@ -29,10 +61,9 @@ cit_servicios = Blueprint("cit_servicios", __name__, template_folder="templates"
 @permission_required(MODULO, Permiso.VER)
 def list_active():
     """Listado de Servicios activos"""
-    activos = CITServicio.query.filter(CITServicio.estatus == "A").all()
     return render_template(
         "cit_servicios/list.jinja2",
-        servicios=activos,
+        filtros=json.dumps({"estatus": "A"}),
         titulo="Servicios",
         estatus="A",
     )
@@ -43,10 +74,9 @@ def list_active():
 @permission_required(MODULO, Permiso.MODIFICAR)
 def list_inactive():
     """Listado de Servicios inactivos"""
-    inactivos = CITServicio.query.filter(CITServicio.estatus == "B").all()
     return render_template(
         "cit_servicios/list.jinja2",
-        servicios=inactivos,
+        filtros=json.dumps({"estatus": "B"}),
         titulo="Servicios inactivos",
         estatus="B",
     )
@@ -57,7 +87,7 @@ def list_inactive():
 @permission_required(MODULO, Permiso.VER)
 def detail(servicio_id):
     """Detalle de un Servicio"""
-    servicio = CITServicio.query.get_or_404(servicio_id)
+    servicio = CitServicio.query.get_or_404(servicio_id)
     return render_template("cit_servicios/detail.jinja2", servicio=servicio)
 
 
@@ -66,7 +96,7 @@ def detail(servicio_id):
 @permission_required(MODULO, Permiso.CREAR)
 def new():
     """Nuevo Servicio"""
-    form = CITServiciosForm()
+    form = CitServiciosForm()
     validacion = False
     if form.validate_on_submit():
         try:
@@ -77,7 +107,7 @@ def new():
             validacion = False
 
         if validacion:
-            servicio = CITServicio(
+            servicio = CitServicio(
                 clave=form.clave.data.upper(),
                 nombre=form.nombre.data,
                 solicitar_expedientes=form.solicitar_expedientes.data,
@@ -101,8 +131,8 @@ def new():
 @permission_required(MODULO, Permiso.MODIFICAR)
 def edit(servicio_id):
     """Editar Servicio"""
-    servicio = CITServicio.query.get_or_404(servicio_id)
-    form = CITServiciosForm()
+    servicio = CitServicio.query.get_or_404(servicio_id)
+    form = CitServiciosForm()
     validacion = False
     if form.validate_on_submit():
 
@@ -137,15 +167,16 @@ def edit(servicio_id):
 
 def _validar(form, same=False):
     if not same:
-        clave_existente = CITServicio.query.filter(CITServicio.clave == form.clave.data).first()
+        clave_existente = CitServicio.query.filter(CitServicio.clave == form.clave.data).first()
         if clave_existente:
             raise Exception("La clave ya se encuentra en uso.")
     min_duracion = datetime.strptime("00:15", "%H:%M")
-    if form.duracion.data < min_duracion:
+    duracion = datetime.strptime(form.duracion.data.strftime("%H:%M"), "%H:%M")
+    if duracion < min_duracion:
         min_duracion = min_duracion.strftime("%H:%M")
         raise Exception(f"La duración del servicio es muy poco, lo mínimno permitido son: {min_duracion}")
     max_duracion = datetime.strptime("08:00", "%H:%M")
-    if form.duracion.data > max_duracion:
+    if duracion > max_duracion:
         max_duracion = max_duracion.strftime("%H:%M")
         raise Exception(f"La duración del servicio es mucho, lo máximo permitido son: {max_duracion}")
     return True
@@ -156,7 +187,7 @@ def _validar(form, same=False):
 @permission_required(MODULO, Permiso.MODIFICAR)
 def delete(servicio_id):
     """Eliminar Servicio"""
-    servicio = CITServicio.query.get_or_404(servicio_id)
+    servicio = CitServicio.query.get_or_404(servicio_id)
     if servicio.estatus == "A":
         servicio.delete()
         bitacora = Bitacora(
@@ -175,7 +206,7 @@ def delete(servicio_id):
 @permission_required(MODULO, Permiso.MODIFICAR)
 def recover(servicio_id):
     """Recuperar Servicio"""
-    servicio = CITServicio.query.get_or_404(servicio_id)
+    servicio = CitServicio.query.get_or_404(servicio_id)
     if servicio.estatus == "B":
         servicio.recover()
         bitacora = Bitacora(

@@ -6,7 +6,7 @@ from citas_backend.extensions import db
 from lib.universal_mixin import UniversalMixin
 
 
-class CITServicio(db.Model, UniversalMixin):
+class CitServicio(db.Model, UniversalMixin):
     """CITServicio"""
 
     # Nombre de la tabla

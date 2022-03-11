@@ -6,7 +6,7 @@ from wtforms import StringField, SubmitField, BooleanField, TimeField
 from wtforms.validators import DataRequired, Length, Optional
 
 
-class CITServiciosForm(FlaskForm):
+class CitServiciosForm(FlaskForm):
     """Formulario CITDíasInhabiles"""
 
     clave = StringField("Clave", validators=[DataRequired(), Length(max=32)])

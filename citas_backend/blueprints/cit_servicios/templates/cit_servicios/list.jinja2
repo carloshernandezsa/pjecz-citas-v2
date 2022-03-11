@@ -26,20 +26,39 @@
                     <th>Duración</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for servicio in servicios %}
-                <tr>
-                    <td><a href="{{ url_for('cit_servicios.detail', servicio_id=servicio.id) }}">{{ servicio.clave }}</a></td>
-                    <td>{{ servicio.nombre }}</td>
-                    <td>{{ servicio.solicitar_expedientes }}</td>
-                    <td>{{ servicio.duracion.strftime("%H:%M") }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
         </table>
     {% endcall %}
 {% endblock %}
 
 {% block custom_javascript %}
-    {{ list.datatable('cit_servicios_datatable') }}
+    {{ list.config_datatable() }}
+    <script>
+        configDataTable['ajax']['url'] = '/cit_servicios/datatable_json';
+        configDataTable['ajax']['data'] = {{ filtros }};
+        configDataTable['columns'] = [
+            { data: "clave" },
+            { data: "nombre" },
+            { data: "solicitar_expedientes" },
+            { data: "duracion" }
+        ];
+        configDataTable['columnDefs'] = [
+            {
+                targets: 0, // clave
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + data.texto + '</a>';
+                }
+            },
+            {
+                targets: 2, // solicitar_expedientes
+                data: null,
+                render: function(data, type, row, meta) {
+                    if (data == true)
+                        return 'Sí';
+                    return 'No';
+                }
+            }
+        ];
+        $('#cit_servicios_datatable').DataTable(configDataTable);
+    </script>
 {% endblock %}
