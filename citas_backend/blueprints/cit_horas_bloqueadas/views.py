@@ -65,7 +65,7 @@ def detail(hora_bloqueada_id):
     return render_template("cit_horas_bloqueadas/detail.jinja2", hora_bloqueada=hora_bloqueada)
 
 
-def _validar(form:CitHoraBloqueadaForm):
+def _validar(form: CitHoraBloqueadaForm):
     # validar fechas
     fecha = form.fecha.data
     if fecha < date.today():
@@ -137,8 +137,8 @@ def edit(hora_bloqueada_id):
         if validacion:
             hora_bloqueada.oficina_id = form.oficina_id.data
             hora_bloqueada.fecha = form.fecha.data
-            hora_bloqueada.inicio_tiempo=form.inicio_tiempo.data,
-            hora_bloqueada.termino_tiempo=form.termino_tiempo.data,
+            hora_bloqueada.inicio_tiempo = (form.inicio_tiempo.data,)
+            hora_bloqueada.termino_tiempo = (form.termino_tiempo.data,)
             hora_bloqueada.descripcion = safe_string(form.descripcion.data)
             hora_bloqueada.save()
             bitacora = Bitacora(
@@ -151,8 +151,8 @@ def edit(hora_bloqueada_id):
             flash(bitacora.descripcion, "success")
             return redirect(bitacora.url)
     form.fecha.data = hora_bloqueada.fecha
-    form.inicio_tiempo.data  = hora_bloqueada.inicio_tiempo
-    form.termino_tiempo.data  = hora_bloqueada.termino_tiempo
+    form.inicio_tiempo.data = hora_bloqueada.inicio_tiempo
+    form.termino_tiempo.data = hora_bloqueada.termino_tiempo
     form.descripcion.data = hora_bloqueada.descripcion
     return render_template("cit_horas_bloqueadas/edit.jinja2", form=form, hora_bloqueada=hora_bloqueada)
 
@@ -204,8 +204,7 @@ def oficinas():
     consulta = consulta.filter_by(estatus="A")
     if "searchString" in request.form:
         palabra_buscada = safe_string(request.form["searchString"]).upper()
-        consulta = consulta.filter(or_(Oficina.clave.contains(palabra_buscada),\
-            Oficina.descripcion_corta.contains(palabra_buscada)))
+        consulta = consulta.filter(or_(Oficina.clave.contains(palabra_buscada), Oficina.descripcion_corta.contains(palabra_buscada)))
     consulta = consulta.order_by(Oficina.clave).limit(10).all()
     # Elaborar datos el Select2
     results = []
@@ -217,9 +216,4 @@ def oficinas():
             }
         )
 
-    return {
-        "results": results,
-        "pagination": {
-            "more": False
-        }
-    }
+    return {"results": results, "pagination": {"more": False}}
