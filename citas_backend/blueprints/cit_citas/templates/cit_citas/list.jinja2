@@ -12,6 +12,7 @@
             {{ topbar.button_primary('Clientes', url_for('cit_clientes.list_active'), 'mdi:account-tie') }}
             {{ topbar.button_primary('Servicios', url_for('cit_servicios.list_active'), 'mdi:account-wrench') }}
             {{ topbar.button_primary('Días Inhábiles', url_for('cit_dias_inhabiles.list_active'), 'mdi:calendar-remove') }}
+            {{ topbar.button_primary('Horas Bloqueadas', url_for('cit_horas_bloqueadas.list_active'), 'mdi:calendar-clock') }}
         {% endif %}
         {#{ topbar.button_search('Buscar', url_for('cit_citas.search')) }#}
     {% endcall %}

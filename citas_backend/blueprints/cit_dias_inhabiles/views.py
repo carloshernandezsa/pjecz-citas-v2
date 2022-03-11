@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
-from lib.safe_string import safe_message
+from lib.safe_string import safe_message, safe_string
 
 from citas_backend.blueprints.permisos.models import Permiso
 from citas_backend.blueprints.usuarios.decorators import permission_required
@@ -66,6 +66,10 @@ def _validar_fecha(fecha):
     fecha_max_futura = date.today() + relativedelta(months=+MESES_FUTUROS)
     if fecha > fecha_max_futura:
         raise Exception(f"La fecha es muy futura, lo máximo permitido es: {fecha_max_futura}")
+    # Validamos si ya existe esa fecha
+    fecha_ocupada = CitDiaInhabil.query.filter(CitDiaInhabil.fecha == fecha).first()
+    if fecha_ocupada:
+        raise Exception("Esa fecha ya está asignada.")
     return True
 
 
@@ -86,7 +90,7 @@ def new():
         if validacion:
             dia_inhabil = CitDiaInhabil(
                 fecha=form.fecha.data,
-                descripcion=form.descripcion.data,
+                descripcion=safe_string(form.descripcion.data),
             )
             dia_inhabil.save()
             bitacora = Bitacora(
@@ -118,7 +122,7 @@ def edit(dia_inhabil_id):
             validacion = False
         if validacion:
             dia_inhabil.fecha = form.fecha.data
-            dia_inhabil.descripcion = form.descripcion.data
+            dia_inhabil.descripcion = safe_string(form.descripcion.data)
             dia_inhabil.save()
             bitacora = Bitacora(
                 modulo=Modulo.query.filter_by(nombre=MODULO).first(),
