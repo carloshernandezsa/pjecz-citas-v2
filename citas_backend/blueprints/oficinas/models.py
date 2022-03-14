@@ -32,6 +32,7 @@ class Oficina(db.Model, UniversalMixin):
     # Hijos
     usuarios = db.relationship("Usuario", back_populates="oficina", lazy="noload")
     cit_citas = db.relationship("CitCita", back_populates="oficina", lazy="noload")
+    cit_horas_bloqueadas = db.relationship("CitHoraBloqueada", back_populates="oficina", lazy="noload")
 
     @property
     def clave_nombre(self):
