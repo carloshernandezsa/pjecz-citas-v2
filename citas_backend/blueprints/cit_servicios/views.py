@@ -25,17 +25,17 @@ cit_servicios = Blueprint("cit_servicios", __name__, template_folder="templates"
 MODULO = "CIT SERVICIOS"
 
 
-@cit_servicios.route('/cit_servicios/datatable_json', methods=['GET', 'POST'])
+@cit_servicios.route("/cit_servicios/datatable_json", methods=["GET", "POST"])
 def datatable_json():
     """DataTable JSON para listado de servicios"""
     # Tomar parámetros de Datatables
     draw, start, rows_per_page = get_datatable_parameters()
     # Consultar
     consulta = CitServicio.query
-    if 'estatus' in request.form:
-        consulta = consulta.filter_by(estatus=request.form['estatus'])
+    if "estatus" in request.form:
+        consulta = consulta.filter_by(estatus=request.form["estatus"])
     else:
-        consulta = consulta.filter_by(estatus='A')
+        consulta = consulta.filter_by(estatus="A")
     registros = consulta.order_by(CitServicio.id).offset(start).limit(rows_per_page).all()
     total = consulta.count()
     # Elaborar datos para DataTable
@@ -43,13 +43,13 @@ def datatable_json():
     for resultado in registros:
         data.append(
             {
-                'clave': {
-                    'texto': resultado.clave,
-                    'url': url_for('cit_servicios.detail', servicio_id=resultado.id),
+                "clave": {
+                    "texto": resultado.clave,
+                    "url": url_for("cit_servicios.detail", servicio_id=resultado.id),
                 },
-                'nombre': resultado.nombre,
-                'solicitar_expedientes': resultado.solicitar_expedientes,
-                'duracion': resultado.duracion.strftime("%H:%M"),
+                "nombre": resultado.nombre,
+                "solicitar_expedientes": resultado.solicitar_expedientes,
+                "duracion": resultado.duracion.strftime("%H:%M"),
             }
         )
     # Entregar JSON

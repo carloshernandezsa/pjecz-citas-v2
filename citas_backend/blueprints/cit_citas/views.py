@@ -17,6 +17,7 @@ MODULO = "CIT CITAS"
 
 cit_citas = Blueprint("cit_citas", __name__, template_folder="templates")
 
+
 @cit_citas.route("/cit_citas/datatable_json", methods=["GET", "POST"])
 def datatable_json():
     """DataTable JSON para listado de citas"""
