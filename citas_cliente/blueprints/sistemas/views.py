@@ -10,10 +10,9 @@ sistemas = Blueprint("sistemas", __name__, template_folder="templates")
 @sistemas.route("/")
 def start():
     """Página inicial"""
-    # if current_user.is_authenticated:
-    #     return render_template("sistemas/start.jinja2")
-    # return redirect("/login")
-    return render_template("start.jinja2")
+    if True:  # current_user.is_authenticated
+        return render_template("sistemas/start.jinja2")
+    return redirect("/login")
 
 
 @sistemas.app_errorhandler(400)
