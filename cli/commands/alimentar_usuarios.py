@@ -6,10 +6,10 @@ import csv
 import click
 from lib.pwgen import generar_contrasena
 
-from citas_backend.blueprints.autoridades.models import Autoridad
-from citas_backend.blueprints.oficinas.models import Oficina
-from citas_backend.blueprints.usuarios.models import Usuario
-from citas_backend.extensions import pwd_context
+from citas_admin.blueprints.autoridades.models import Autoridad
+from citas_admin.blueprints.oficinas.models import Oficina
+from citas_admin.blueprints.usuarios.models import Usuario
+from citas_admin.extensions import pwd_context
 
 USUARIOS_CSV = "seed/usuarios_roles.csv"
 

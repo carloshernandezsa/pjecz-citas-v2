@@ -5,7 +5,7 @@ from pathlib import Path
 import csv
 import click
 
-from citas_backend.blueprints.distritos.models import Distrito
+from citas_admin.blueprints.distritos.models import Distrito
 
 DISTRITOS_CSV = "seed/distritos.csv"
 

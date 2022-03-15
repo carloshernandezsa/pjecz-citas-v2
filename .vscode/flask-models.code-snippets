@@ -6,7 +6,7 @@
 			"\"\"\"",
 			"${1:Modulos}, modelos",
 			"\"\"\"",
-			"from citas_backend.extensions import db",
+			"from citas_admin.extensions import db",
 			"from lib.universal_mixin import UniversalMixin",
 			"",
 			"",
