@@ -7,7 +7,7 @@ import click
 
 from lib.safe_string import safe_string
 
-from citas_backend.blueprints.materias.models import Materia
+from citas_admin.blueprints.materias.models import Materia
 
 MATERIAS_CSV = "seed/materias.csv"
 

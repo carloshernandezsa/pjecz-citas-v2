@@ -5,7 +5,7 @@ from pathlib import Path
 import csv
 import click
 
-from citas_backend.blueprints.modulos.models import Modulo
+from citas_admin.blueprints.modulos.models import Modulo
 
 
 def respaldar_modulos(salida: str = "modulos.csv"):

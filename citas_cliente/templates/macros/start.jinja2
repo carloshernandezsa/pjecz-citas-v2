@@ -1,0 +1,10 @@
+{# start.jinja2 #}
+
+{%- macro card(title='') -%}
+    <div class="card mb-3">
+        <div class="card-body">
+            {% if title %}<h5 class="card-title">{{ title }}</h5>{% endif %}
+            {{ caller () }}
+        </div>
+    </div>
+{%- endmacro -%}

@@ -1,0 +1,15 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/start.jinja2' as start %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block topbar_actions %}
+    {{ topbar.page('Inicio') }}
+{% endblock %}
+
+{% block content %}
+    {% call start.card() %}
+        <h1 class="text-center">Citas v2 cliente</h1>
+    {% endcall %}
+{% endblock %}

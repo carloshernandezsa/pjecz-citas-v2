@@ -11,12 +11,12 @@ Crear entorno virtual python 3.8 o superior
     pip install --upgrade pip
     pip install -r requirements.txt
 
-Crear archivo `.env` con las variables de entorno
+Crear archivo `.env` con las variables de entorno generales; **note las que quedan vacias...**
 
     # Flask
-    FLASK_APP=citas_backend.app
+    FLASK_APP=
     FLASK_DEBUG=1
-    SECRET_KEY=****************
+    SECRET_KEY=
 
     # Database
     DB_HOST=127.0.0.1
@@ -24,11 +24,23 @@ Crear archivo `.env` con las variables de entorno
     DB_PASS=****************
     DB_USER=adminpjeczcitasv2
 
+    # Redis
+    REDIS_URL=redis://127.0.0.1
+    TASK_QUEUE=pjecz_citas_v2
+
     # Google Cloud Storage
     CLOUD_STORAGE_DEPOSITO=
 
+    # Host
+    HOST=
+
     # Salt para convertir/reconverir el id en hash
-    SALT=****************
+    SALT=NSnx8JfhgSOga9J6
+
+    # Sendgrid
+    SENDGRID_API_KEY=
+    SENDGRID_FROM_EMAIL=
+    SENDGRID_TO_EMAIL_REPORTES=
 
     # Si esta en PRODUCTION se evita reiniciar la base de datos
     DEPLOYMENT_ENVIRONMENT=develop
@@ -50,55 +62,18 @@ Crear archivo `instance/settings.py` con la configuracion para desarrollo
     # SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
 
     # SQLite
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///pjecz_citas_v2.sqlite3'
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///pjecz_citas_v2.sqlite3'
 
-En Fedora o Debian crear archivo `.bashrc` para facilitar la carga de las variables y el entorno virtual desde Konsole
+Quite el comentario para la base de datos que use
 
-    if [ -f ~/.bashrc ]; then
-        source ~/.bashrc
-    fi
+Se mantienen en el repositorio los dos archivos `.bashrc` para citas_admin y citas_cliente.
 
-    source venv/bin/activate
-    if [ -f .env ]; then
-        export $(grep -v '^#' .env | xargs)
-    fi
+En Konsole haga un perfil de nombre **GitHub pjecz-citas-v2 admin**
 
-    figlet Citas V2
-    echo
+    /bin/bash --rcfile citas_admin/.bashrc
 
-    echo "-- Flask"
-    echo "   FLASK_APP:   ${FLASK_APP}"
-    echo "   FLASK_DEBUG: ${FLASK_DEBUG}"
-    echo "   SECRET_KEY:  ${SECRET_KEY}"
-    echo
-    echo "-- Database"
-    echo "   DB_HOST: ${DB_HOST}"
-    echo "   DB_NAME: ${DB_NAME}"
-    echo "   DB_PASS: ${DB_PASS}"
-    echo "   DB_USER: ${DB_USER}"
-    echo
-    echo "-- Google Cloud Storage"
-    echo "   CLOUD_STORAGE_DEPOSITO: ${CLOUD_STORAGE_DEPOSITO}"
-    echo
-    echo "-- Salt"
-    echo "   SALT: ${SALT}"
-    echo
-    echo "-- Deployment environment"
-    echo "   DEPLOYMENT_ENVIRONMENT: ${DEPLOYMENT_ENVIRONMENT}"
-    echo
+Y otro perfil de nombre  **GitHub pjecz-citas-v2 cliente**
 
-    export PGDATABASE=${DB_NAME}
-    export PGPASSWORD=${DB_PASS}
-    export PGUSER=${DB_USER}
-    echo "-- PostgreSQL"
-    echo "   PGDATABASE: ${PGDATABASE}"
-    echo "   PGPASSWORD: ${PGPASSWORD}"
-    echo "   PGUSER:     ${PGUSER}"
-    echo
+    /bin/bash --rcfile citas_cliente/.bashrc
 
-    alias reiniciar="citas db reiniciar"
-    alias arrancar="flask run --port 5010"
-    echo "-- Aliases"
-    echo "   reiniciar: Reiniciar base de datos"
-    echo "   arrancar:  Arrancar Flask"
-    echo
+Abra una terminal para cada perfil

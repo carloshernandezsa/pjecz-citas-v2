@@ -5,9 +5,9 @@ from pathlib import Path
 import csv
 import click
 
-from citas_backend.blueprints.autoridades.models import Autoridad
-from citas_backend.blueprints.distritos.models import Distrito
-from citas_backend.blueprints.materias.models import Materia
+from citas_admin.blueprints.autoridades.models import Autoridad
+from citas_admin.blueprints.distritos.models import Distrito
+from citas_admin.blueprints.materias.models import Materia
 
 AUTORIDADES_CSV = "seed/autoridades.csv"
 

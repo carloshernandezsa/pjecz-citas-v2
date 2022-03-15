@@ -7,11 +7,11 @@ Usuarios
 """
 import click
 
-from citas_backend.app import create_app
-from citas_backend.extensions import db
+from citas_admin.app import create_app
+from citas_admin.extensions import db
 
-from citas_backend.blueprints.usuarios.models import Usuario
-from citas_backend.extensions import pwd_context
+from citas_admin.blueprints.usuarios.models import Usuario
+from citas_admin.extensions import pwd_context
 
 app = create_app()
 db.app = app
