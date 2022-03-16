@@ -15,6 +15,7 @@ from citas_admin.extensions import db
 from cli.commands.alimentar_autoridades import alimentar_autoridades
 from cli.commands.alimentar_distritos import alimentar_distritos
 from cli.commands.alimentar_domicilios import alimentar_domicilios
+from cli.commands.alimentar_cit_servicios import alimentar_cit_servicios
 from cli.commands.alimentar_materias import alimentar_materias
 from cli.commands.alimentar_modulos import alimentar_modulos
 from cli.commands.alimentar_oficinas import alimentar_oficinas
@@ -26,6 +27,7 @@ from cli.commands.alimentar_usuarios_roles import alimentar_usuarios_roles
 from cli.commands.respaldar_autoridades import respaldar_autoridades
 from cli.commands.respaldar_distritos import respaldar_distritos
 from cli.commands.respaldar_domicilios import respaldar_domicilios
+from cli.commands.respaldar_cit_servicios import respaldar_cit_servicios
 from cli.commands.respaldar_materias import respaldar_materias
 from cli.commands.respaldar_modulos import respaldar_modulos
 from cli.commands.respaldar_oficinas import respaldar_oficinas
@@ -67,6 +69,7 @@ def alimentar():
     alimentar_distritos()
     alimentar_autoridades()
     alimentar_domicilios()
+    alimentar_cit_servicios()
     alimentar_oficinas()
     alimentar_usuarios()
     alimentar_usuarios_roles()
@@ -87,6 +90,7 @@ def respaldar():
     respaldar_autoridades()
     respaldar_distritos()
     respaldar_domicilios()
+    respaldar_cit_servicios()
     respaldar_materias()
     respaldar_modulos()
     respaldar_roles_permisos()
