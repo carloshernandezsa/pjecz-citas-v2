@@ -1,0 +1,12 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/start.jinja2' as start %}
+
+{% block title %}Políticas{% endblock %}
+
+
+{% block content %}
+    {% call start.card() %}
+        <h1 class="text-center">{{titulo}}</h1>
+        <p>{{texto}}</p>
+    {% endcall %}
+{% endblock %}

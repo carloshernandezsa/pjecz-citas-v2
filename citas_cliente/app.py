@@ -9,6 +9,7 @@ from citas_cliente.extensions import csrf, db, login_manager, moment
 from citas_cliente.blueprints.cit_clientes.models import CitCliente
 
 from citas_cliente.blueprints.sistemas.views import sistemas
+from citas_cliente.blueprints.politicas.views import politicas
 
 
 def create_app():
@@ -24,6 +25,7 @@ def create_app():
     app.task_queue = rq.Queue(app.config["TASK_QUEUE"], connection=app.redis, default_timeout=1920)
     # Cargar los blueprints
     app.register_blueprint(sistemas)
+    app.register_blueprint(politicas)
     # Cargar las extensiones
     extensions(app)
     authentication(CitCliente)
