@@ -1,0 +1,37 @@
+{% extends 'layouts/login.jinja2' %}
+{% import 'macros/form.jinja2' as f with context %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block welcome %}
+    <div id="welcome" class="text-center">
+        <h4 class="mb-3">{{ title }} — Clientes</h4>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div id="access" class="py-2">
+        {% call f.form_tag('cit_clientes.login', fid='access_form') %}
+        <div id="access-form-password" class="my-2">
+            <div class="form-floating">
+                {% call f.field(form.email, id='email', class='form-control') %}{% endcall %}
+                <label for="email">Correo electrónico</label>
+            </div>
+            <div class="form-floating">
+                {% call f.field(form.contrasena, id='password', class='form-control') %}{% endcall %}
+                <label for="password">Contraseña</label>
+            </div>
+            <button id="access-form-password-submit" class="w-100 btn btn-lg btn-primary my-2" type="submit">Ingresar</button>
+            <p style="text-align: center;">
+            <a href="{{url_for('cit_clientes.new')}}">Registro de nuevo usuario</a><br />
+            <a href="#">¿Olvidó su contraseña?</a>
+            </p>
+            <p style="font-size:small;"><a href="{{url_for('politicas.aviso_privacidad')}}">Aviso de privaciad</a><br />
+            <a href="{{url_for('politicas.terminos_condiciones')}}">Términos y Condiciones</a></p>
+        </div>
+        {% endcall %}
+    </div>
+{% endblock %}
+
+{% block custom_javascript %}
+{% endblock %}

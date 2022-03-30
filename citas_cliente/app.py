@@ -6,11 +6,11 @@ from redis import Redis
 import rq
 from citas_cliente.extensions import csrf, db, login_manager, moment
 
-from citas_cliente.blueprints.cit_clientes.models import CitCliente
-
 from citas_cliente.blueprints.sistemas.views import sistemas
 from citas_cliente.blueprints.politicas.views import politicas
+from citas_cliente.blueprints.cit_clientes.views import cit_cliente
 
+from citas_cliente.blueprints.cit_clientes.models import CitCliente
 
 def create_app():
     """Crear app"""
@@ -25,6 +25,7 @@ def create_app():
     app.task_queue = rq.Queue(app.config["TASK_QUEUE"], connection=app.redis, default_timeout=1920)
     # Cargar los blueprints
     app.register_blueprint(sistemas)
+    app.register_blueprint(cit_cliente)
     app.register_blueprint(politicas)
     # Cargar las extensiones
     extensions(app)
