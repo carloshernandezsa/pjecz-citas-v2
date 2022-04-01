@@ -80,7 +80,7 @@ def search():
 def datatable_json():
     """DataTable JSON para listado de Oficinas"""
     # Tomar parámetros de Datatables
-    draw, start, rows_per_page = datatables.get_parameters()
+    draw, start, rows_per_page = datatables.get_datatable_parameters()
     # Consultar
     consulta = Oficina.query
     if "estatus" in request.form:
@@ -121,7 +121,7 @@ def datatable_json():
             }
         )
     # Entregar JSON
-    return datatables.output(draw, total, data)
+    return datatables.output_datatable_json(draw, total, data)
 
 
 @oficinas.route("/oficinas/<int:oficina_id>")

@@ -10,7 +10,7 @@ from lib.datatables import get_datatable_parameters, output_datatable_json
 from flask import Blueprint, flash, redirect, request, render_template, url_for
 from flask_login import current_user, login_required
 
-from lib.safe_string import safe_message
+from lib.safe_string import safe_string, safe_message
 
 from citas_admin.blueprints.permisos.models import Permiso
 from citas_admin.blueprints.usuarios.decorators import permission_required
@@ -108,8 +108,8 @@ def new():
 
         if validacion:
             servicio = CitServicio(
-                clave=form.clave.data.upper(),
-                nombre=form.nombre.data,
+                clave=safe_string(form.clave.data),
+                nombre=safe_string(form.nombre.data),
                 solicitar_expedientes=form.solicitar_expedientes.data,
                 duracion=form.duracion.data,
             )
@@ -144,8 +144,8 @@ def edit(servicio_id):
             validacion = False
 
         if validacion:
-            servicio.clave = form.clave.data.upper()
-            servicio.nombre = form.nombre.data
+            servicio.clave = safe_string(form.clave.data)
+            servicio.nombre = safe_string(form.nombre.data)
             servicio.solicitar_expedientes = form.solicitar_expedientes.data
             servicio.duracion = form.duracion.data
             servicio.save()
