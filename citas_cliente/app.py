@@ -12,6 +12,7 @@ from citas_cliente.blueprints.cit_clientes.views import cit_cliente
 
 from citas_cliente.blueprints.cit_clientes.models import CitCliente
 
+
 def create_app():
     """Crear app"""
     # Definir app
