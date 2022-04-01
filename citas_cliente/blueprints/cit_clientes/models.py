@@ -17,8 +17,8 @@ class CitCliente(db.Model, UserMixin, UniversalMixin):
     id = db.Column(db.Integer, primary_key=True)
 
     # Clave foránea
-    domicilio_id = db.Column(db.Integer, db.ForeignKey("domicilios.id"), index=True, nullable=False)
-    domicilio = db.relationship("Domicilio", back_populates="cit_clientes")
+    # domicilio_id = db.Column(db.Integer, db.ForeignKey("domicilios.id"), index=True, nullable=False)
+    # domicilio = db.relationship("Domicilio", back_populates="cit_clientes")
 
     # Columnas
     nombres = db.Column(db.String(256), nullable=False)
@@ -28,11 +28,11 @@ class CitCliente(db.Model, UserMixin, UniversalMixin):
     telefono = db.Column(db.String(64), default="", server_default="")
     email = db.Column(db.String(256), unique=True, nullable=False)
     contrasena = db.Column(db.String(256), nullable=False)
-    hash = db.Column(db.String(32), default="", server_default="")
+    hash = db.Column(db.String(256), default="", server_default="")
     renovacion_fecha = db.Column(db.Date(), nullable=False)
 
     # Hijos
-    cit_citas = db.relationship("CitCita", back_populates="cit_cliente")
+    # cit_citas = db.relationship("CitCita", back_populates="cit_cliente")
 
     @property
     def nombre(self):
