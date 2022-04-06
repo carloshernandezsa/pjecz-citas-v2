@@ -11,6 +11,7 @@
 {% block content %}
     {% call start.card() %}
         <h1 class="text-center">Citas v2 cliente</h1>
+        <p>E-mail de usuario: {{current_user.email}}</p>
         <a href="{{url_for('politicas.aviso_privacidad')}}">Aviso de privaciad</a><br/>
         <a href="{{url_for('politicas.terminos_condiciones')}}">Términos y Condiciones</a><br/>
         <a href="{{url_for('cit_clientes.logout')}}">Cerrar Sesión</a>
