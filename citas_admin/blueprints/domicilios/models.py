@@ -30,4 +30,4 @@ class Domicilio(db.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return f"<Domicilio {self.completo}>"
+        return f"<Domicilio {self.id}>"

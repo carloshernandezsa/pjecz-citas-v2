@@ -5,9 +5,9 @@ from setuptools import setup
 
 
 setup(
-    name="citas",
+    name="citas_admin",
     version="0.1",
-    packages=["citas"],
+    packages=["citas_admin"],
     entry_points="""
         [console_scripts]
         citas=cli.cli:cli

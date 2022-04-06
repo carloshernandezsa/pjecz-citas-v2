@@ -14,7 +14,7 @@ def respaldar_cit_servicios(salida: str = "cit_servicios.csv"):
     if ruta.exists():
         click.echo(f"AVISO: {salida} existe, no voy a sobreescribirlo.")
         return
-    click.echo("Respaldando Citas Servicios...")
+    click.echo("Respaldando servicios de las citas...")
     contador = 0
     servicios = CitServicio.query.order_by(CitServicio.id).all()
     with open(ruta, "w", encoding="utf8") as puntero:

@@ -20,4 +20,4 @@ class CitDiaInhabil(db.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return "<CitDiaInhabil>"
+        return f"<CitDiaInhabil {self.id}>"

@@ -2,11 +2,10 @@
 Usuarios Roles, vistas
 """
 import json
-
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
-from lib import datatables
+from lib.datatables import get_datatable_parameters, output_datatable_json
 from lib.safe_string import safe_message
 
 from citas_admin.blueprints.permisos.models import Permiso
@@ -27,34 +26,11 @@ def before_request():
     """Permiso por defecto"""
 
 
-@usuarios_roles.route("/usuarios_roles")
-def list_active():
-    """Listado de Usuarios Roles activos"""
-    return render_template(
-        "usuarios_roles/list.jinja2",
-        filtros=json.dumps({"estatus": "A"}),
-        titulo="Usuarios Roles",
-        estatus="A",
-    )
-
-
-@usuarios_roles.route("/usuarios_roles/inactivos")
-@permission_required(MODULO, Permiso.MODIFICAR)
-def list_inactive():
-    """Listado de Usuarios Roles inactivos"""
-    return render_template(
-        "usuarios_roles/list.jinja2",
-        filtros=json.dumps({"estatus": "B"}),
-        titulo="Usuarios Roles inactivos",
-        estatus="B",
-    )
-
-
 @usuarios_roles.route("/usuarios_roles/datatable_json", methods=["GET", "POST"])
 def datatable_json():
     """DataTable JSON para listado de Usuarios Roles"""
     # Tomar parámetros de Datatables
-    draw, start, rows_per_page = datatables.get_parameters()
+    draw, start, rows_per_page = get_datatable_parameters()
     # Consultar
     consulta = UsuarioRol.query
     if "estatus" in request.form:
@@ -89,7 +65,30 @@ def datatable_json():
             }
         )
     # Entregar JSON
-    return datatables.output(draw, total, data)
+    return output_datatable_json(draw, total, data)
+
+
+@usuarios_roles.route("/usuarios_roles")
+def list_active():
+    """Listado de Usuarios Roles activos"""
+    return render_template(
+        "usuarios_roles/list.jinja2",
+        filtros=json.dumps({"estatus": "A"}),
+        titulo="Usuarios Roles",
+        estatus="A",
+    )
+
+
+@usuarios_roles.route("/usuarios_roles/inactivos")
+@permission_required(MODULO, Permiso.MODIFICAR)
+def list_inactive():
+    """Listado de Usuarios Roles inactivos"""
+    return render_template(
+        "usuarios_roles/list.jinja2",
+        filtros=json.dumps({"estatus": "B"}),
+        titulo="Usuarios Roles inactivos",
+        estatus="B",
+    )
 
 
 @usuarios_roles.route("/usuarios_roles/<int:usuario_rol_id>")

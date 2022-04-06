@@ -5,7 +5,7 @@ from flask import Blueprint, render_template
 from flask.helpers import url_for
 from flask_login import login_required
 
-from lib import datatables
+from lib.datatables import get_datatable_parameters, output_datatable_json
 
 from citas_admin.blueprints.entradas_salidas.models import EntradaSalida
 from citas_admin.blueprints.permisos.models import Permiso
@@ -16,24 +16,16 @@ MODULO = "ENTRADAS SALIDAS"
 entradas_salidas = Blueprint("entradas_salidas", __name__, template_folder="templates")
 
 
-@entradas_salidas.route("/entradas_salidas")
-@login_required
-@permission_required(MODULO, Permiso.VER)
-def list_active():
-    """Listado de entradas y salidas"""
-    return render_template("entradas_salidas/list.jinja2")
-
-
 @entradas_salidas.route("/entradas_salidas/datatable_json", methods=["GET", "POST"])
 @login_required
 @permission_required(MODULO, Permiso.VER)
 def datatable_json():
     """DataTable JSON para listado de entradas y salidas"""
     # Tomar parámetros de Datatables
-    draw, start, rows_per_page = datatables.get_datatable_parameters()
+    draw, start, rows_per_page = get_datatable_parameters()
     # Consultar
     consulta = EntradaSalida.query
-    registros = consulta.order_by(EntradaSalida.creado.desc()).offset(start).limit(rows_per_page).all()
+    registros = consulta.order_by(EntradaSalida.id.desc()).offset(start).limit(rows_per_page).all()
     total = consulta.count()
     # Elaborar datos para DataTable
     data = []
@@ -49,4 +41,12 @@ def datatable_json():
             }
         )
     # Entregar JSON
-    return datatables.output_datatable_json(draw, total, data)
+    return output_datatable_json(draw, total, data)
+
+
+@entradas_salidas.route("/entradas_salidas")
+@login_required
+@permission_required(MODULO, Permiso.VER)
+def list_active():
+    """Listado de entradas y salidas"""
+    return render_template("entradas_salidas/list.jinja2")

@@ -10,7 +10,7 @@ import google.oauth2.id_token
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
-from lib import datatables
+from lib.datatables import get_datatable_parameters, output_datatable_json
 from lib.firebase_auth import firebase_auth
 from lib.pwgen import generar_contrasena
 from lib.safe_next_url import safe_next_url
@@ -195,7 +195,7 @@ def search():
 def datatable_json():
     """DataTable JSON para listado de Usuarios"""
     # Tomar parámetros de Datatables
-    draw, start, rows_per_page = datatables.get_datatable_parameters()
+    draw, start, rows_per_page = get_datatable_parameters()
     # Consultar
     consulta = Usuario.query
     if "estatus" in request.form:
@@ -217,10 +217,10 @@ def datatable_json():
     if "puesto" in request.form:
         consulta = consulta.filter(Usuario.puesto.contains(safe_string(request.form["puesto"])))
     if "email" in request.form:
-        consulta = consulta.filter(Usuario.email.contains(safe_string(request.form["email"], to_uppercase=False)))
+        consulta = consulta.filter(Usuario.email.contains(safe_email(request.form["email"], search_fragment=True)))
     if "workspace" in request.form:
         consulta = consulta.filter(Usuario.workspace == safe_string(request.form["email"]))
-    registros = consulta.order_by(Usuario.email.asc()).offset(start).limit(rows_per_page).all()
+    registros = consulta.order_by(Usuario.email).offset(start).limit(rows_per_page).all()
     total = consulta.count()
     # Elaborar datos para DataTable
     data = []
@@ -237,11 +237,14 @@ def datatable_json():
                     "clave": resultado.autoridad.clave,
                     "url": url_for("autoridades.detail", autoridad_id=resultado.autoridad_id) if current_user.can_view("AUTORIDADES") else "",
                 },
-                "oficina_clave": resultado.oficina.clave,
+                "oficina": {
+                    "clave": resultado.oficina.clave,
+                    "url": url_for("oficinas.detail", oficina_id=resultado.oficina_id) if current_user.can_view("OFICINAS") else "",
+                },
             }
         )
     # Entregar JSON
-    return datatables.output_datatable_json(draw, total, data)
+    return output_datatable_json(draw, total, data)
 
 
 @usuarios.route("/usuarios/<int:usuario_id>")

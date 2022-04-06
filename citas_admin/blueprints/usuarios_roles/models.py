@@ -25,4 +25,4 @@ class UsuarioRol(db.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return f"<UsuarioRol {self.descripcion}>"
+        return f"<UsuarioRol {self.id}>"
