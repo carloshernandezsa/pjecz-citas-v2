@@ -94,7 +94,7 @@ def new():
                 contrasena=pwd_context.hash(form.contrasena.data),
                 hash=pwd_context.hash(generar_contrasena()),
                 renovacion_fecha=date.today() + relativedelta(months=12),
-                domicilio_id=1
+                domicilio_id=1,
             )
             cliente.save()
             flash(f"Su registro se completó éxitosamente.", "success")
