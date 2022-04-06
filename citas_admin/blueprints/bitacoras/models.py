@@ -26,4 +26,4 @@ class Bitacora(db.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return f"<Bitacora {self.creado} {self.descripcion}>"
+        return f"<Bitacora {self.id}>"

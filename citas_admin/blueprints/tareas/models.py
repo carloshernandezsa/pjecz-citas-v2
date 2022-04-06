@@ -41,4 +41,4 @@ class Tarea(db.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return f"<Tarea {self.nombre}>"
+        return f"<Tarea {self.id}>"

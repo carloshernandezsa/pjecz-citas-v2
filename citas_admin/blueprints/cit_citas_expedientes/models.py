@@ -23,4 +23,4 @@ class CitCitaExpediente(db.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return "<CitCitaExpediente>"
+        return f"<CitCitaExpediente {self.id}>"

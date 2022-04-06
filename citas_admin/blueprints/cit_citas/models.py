@@ -41,4 +41,4 @@ class CitCita(db.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return "<CitCita>"
+        return f"<CitCita {self.id}>"

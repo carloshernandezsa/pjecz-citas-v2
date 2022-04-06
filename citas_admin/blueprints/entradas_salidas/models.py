@@ -36,4 +36,4 @@ class EntradaSalida(db.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return f"<Sesion {self.creado} {self.tipo}>"
+        return f"<Sesion {self.id}>"

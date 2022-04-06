@@ -26,4 +26,4 @@ class CitHoraBloqueada(db.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return "<CitHoraBloqueada>"
+        return f"<CitHoraBloqueada {self.id}>"
