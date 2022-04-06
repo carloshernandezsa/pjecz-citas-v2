@@ -9,6 +9,7 @@ from citas_cliente.extensions import csrf, db, login_manager, moment
 from citas_cliente.blueprints.sistemas.views import sistemas
 from citas_cliente.blueprints.politicas.views import politicas
 from citas_cliente.blueprints.cit_clientes.views import cit_cliente
+from citas_cliente.blueprints.domicilios.views import domicilios
 
 from citas_cliente.blueprints.cit_clientes.models import CitCliente
 
@@ -28,6 +29,7 @@ def create_app():
     app.register_blueprint(sistemas)
     app.register_blueprint(cit_cliente)
     app.register_blueprint(politicas)
+    app.register_blueprint(domicilios)
     # Cargar las extensiones
     extensions(app)
     authentication(CitCliente)
