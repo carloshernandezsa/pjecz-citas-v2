@@ -26,7 +26,7 @@ class CitCliente(db.Model, UniversalMixin):
     telefono = db.Column(db.String(64), default="", server_default="")
     email = db.Column(db.String(256), unique=True, nullable=False)
     contrasena = db.Column(db.String(256), nullable=False)
-    hash = db.Column(db.String(32), default="", server_default="")
+    hash = db.Column(db.String(256), default="", server_default="")
     renovacion_fecha = db.Column(db.Date(), nullable=False)
 
     # Hijos
