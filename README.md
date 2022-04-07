@@ -11,7 +11,11 @@ Crear entorno virtual python 3.8 o superior
     pip install --upgrade pip
     pip install -r requirements.txt
 
-Crear archivo `.env` con las variables de entorno generales; **note las que quedan vacias...**
+Crear archivo `.env` con las variables de entorno generales.
+
+Observe que en el repositorio archivos para arrancar Konsole en `citas_admin/.bashrc` y  `citas_cliente/.bashrc`
+
+**Deje vacias** a `FLASK_APP`, `SECRET_KEY` y `HOST` porque `.bashrc` las define.
 
     # Flask
     FLASK_APP=
@@ -35,7 +39,7 @@ Crear archivo `.env` con las variables de entorno generales; **note las que qued
     HOST=
 
     # Salt para convertir/reconverir el id en hash
-    SALT=NSnx8JfhgSOga9J6
+    SALT=
 
     # Sendgrid
     SENDGRID_API_KEY=
@@ -64,9 +68,7 @@ Crear archivo `instance/settings.py` con la configuracion para desarrollo
     # SQLite
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///pjecz_citas_v2.sqlite3'
 
-Quite el comentario para la base de datos que use
-
-Se mantienen en el repositorio los dos archivos `.bashrc` para citas_admin y citas_cliente.
+**Quite el comentario en la base de datos que use.**
 
 En Konsole haga un perfil de nombre **GitHub pjecz-citas-v2 admin**
 
