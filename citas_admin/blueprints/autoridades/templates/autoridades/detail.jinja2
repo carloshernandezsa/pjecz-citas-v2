@@ -53,60 +53,34 @@
         {% if autoridad.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar a ' + autoridad.descripcion + '?') }}{% endif %}
         {% if autoridad.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + autoridad.descripcion + '?') }}{% endif %}
     {% endif %}
+    {{ detail.config_datatable() }}
     {% if current_user.can_view('USUARIOS') %}
-    <script>
-        $('#usuarios_datatable').DataTable({
-            processing: true,
-            serverSide: true,
-            ordering: false,
-            searching: false,
-            responsive: true,
-            scrollX: true,
-            ajax: {
-                url: "/usuarios/datatable_json",
-                type: "POST",
-                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-                dataType: "json",
-                dataSrc: "data",
-                data: { "estatus": "A", "autoridad_id": {{ autoridad.id }} }
-            },
-            columns: [
+        <script>
+            configDataTable['ajax']['url'] = '/usuarios/datatable_json';
+            configDataTable['ajax']['data'] = { 'estatus': "A", 'autoridad_id': {{ autoridad.id}} };
+            configDataTable['columns'] = [
                 { data: "detalle" },
                 { data: "nombre" },
                 { data: "puesto" }
-            ],
-            columnDefs: [
+            ];
+            configDataTable['columnDefs'] = [
                 {
-                    targets: 0,
+                    targets: 0, // detalle
                     data: null,
                     render: function(data, type, row, meta) {
                         return '<a href="' + data.url + '">' + data.email + '</a>';
                     }
                 },
                 {
-                    targets: [1, 2],
+                    targets: [1, 2], // nombre, puesto
                     data: null,
                     render: function(data, type, row, meta) {
                         return (data.length > 32 ? data.substr(0, 32) + '…' : data);
                     }
                 }
-            ],
-            language: {
-                lengthMenu: "Mostrar _MENU_",
-                search: "Filtrar:",
-                zeroRecords: "No se encontraron registros",
-                info: "Total de registros _TOTAL_ ",
-                infoEmpty: "No hay registros",
-                infoFiltered: "(_TOTAL_ filtrados de _MAX_ registros)",
-                oPaginate: {
-                    sFirst: "Primero",
-                    sLast: "Último",
-                    sNext: "Siguiente",
-                    sPrevious: "Anterior"
-                }
-            }
-        });
-    </script>
+            ];
+            $('#usuarios_datatable').DataTable(configDataTable);
+        </script>
     {% endif %}
     {{ detail.moment_js(moment) }}
 {% endblock %}
