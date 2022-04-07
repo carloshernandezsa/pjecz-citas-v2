@@ -24,10 +24,6 @@ class Domicilio(db.Model, UniversalMixin):
     cp = db.Column(db.Integer(), nullable=False)
     completo = db.Column(db.String(1024), nullable=False, default="", server_default="")
 
-    # Hijos
-    oficinas = db.relationship("Oficina", back_populates="domicilio")
-    # cit_clientes = db.relationship("CitCliente", back_populates="domicilio")
-
     def elaborar_completo(self):
         """Elaborar completo"""
         elementos = []

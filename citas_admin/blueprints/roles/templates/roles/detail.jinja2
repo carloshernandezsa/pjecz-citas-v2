@@ -18,32 +18,36 @@
 {% endblock %}
 
 {% block content %}
-    {% call detail.card('Permisos') %}
-        <table id="permisos_datatable" class="table display nowrap" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Nombres</th>
-                    <th>Modulos</th>
-                    <th>Niveles</th>
-                </tr>
-            </thead>
-        </table>
-        {% if current_user.can_insert('PERMISOS') %}
-        <a href="{{ url_for('permisos.new_with_rol', rol_id=rol.id) }}" class="btn btn-primary">Agregar</a>
-        {% endif %}
-    {% endcall %}
-    {% call detail.card('Usuarios') %}
-        <table id="usuarios_roles_datatable" class="table display nowrap" style="width:100%">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>e-mail</th>
-                    <th>Nombres completos</th>
-                    <th>Puestos</th>
-                </tr>
-            </thead>
-        </table>
-    {% endcall %}
+    {% if current_user.can_view('PERMISOS') %}
+        {% call detail.card('Permisos') %}
+            <table id="permisos_datatable" class="table display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Módulo</th>
+                        <th>Nivel</th>
+                    </tr>
+                </thead>
+            </table>
+            {% if current_user.can_insert('PERMISOS') %}
+            <a href="{{ url_for('permisos.new_with_rol', rol_id=rol.id) }}" class="btn btn-primary">Agregar</a>
+            {% endif %}
+        {% endcall %}
+    {% endif %}
+    {% if current_user.can_view('USUARIOS ROLES') %}
+        {% call detail.card('Usuarios en este rol') %}
+            <table id="usuarios_roles_datatable" class="table display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>e-mail</th>
+                        <th>Nombre completo</th>
+                        <th>Puesto</th>
+                    </tr>
+                </thead>
+            </table>
+        {% endcall %}
+    {% endif %}
 {% endblock %}
 
 {% block custom_javascript %}
@@ -51,43 +55,26 @@
         {% if rol.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar a ' + rol.nombre + '?') }}{% endif %}
         {% if rol.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + rol.nombre + '?') }}{% endif %}
     {% endif %}
-    {% if current_user.can_edit('PERMISOS') %}
-        {{ modals.custom_javascript('Eliminar', '¿Eliminar ese permiso del rol?', 'DeletePermiso') }}
-    {% endif %}
-    {% if current_user.can_edit('USUARIOS ROLES') %}
-        {{ modals.custom_javascript('Eliminar', '¿Eliminar ese usuario del rol?', 'DeleteUsuarioRol') }}
-    {% endif %}
-    <script>
-        $('#permisos_datatable').DataTable({
-            processing: true,
-            serverSide: true,
-            ordering: false,
-            searching: false,
-            responsive: true,
-            scrollX: true,
-            ajax: {
-                url: "/permisos/datatable_json",
-                type: "POST",
-                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-                dataType: "json",
-                dataSrc: "data",
-                data: {"estatus": "A", "rol_id": {{ rol.id }} }
-            },
-            columns: [
+    {{ detail.config_datatable() }}
+    {% if current_user.can_view('PERMISOS') %}
+        <script>
+            configDataTable['ajax']['url'] = '/permisos/datatable_json';
+            configDataTable['ajax']['data'] = { 'estatus': "A", 'rol_id': {{ rol.id}} };
+            configDataTable['columns'] = [
                 { data: "detalle" },
                 { data: "modulo" },
                 { data: "nivel" }
-            ],
-            columnDefs: [
+            ];
+            configDataTable['columnDefs'] = [
                 {
-                    targets: 0,
+                    targets: 0, // detalle
                     data: null,
                     render: function(data, type, row, meta) {
                         return '<a href="' + data.url + '">' + data.nombre + '</a>';
                     }
                 },
                 {
-                    targets: 1,
+                    targets: 1, // modulo
                     data: null,
                     render: function(data, type, row, meta) {
                         if (data.url == '') {
@@ -97,55 +84,30 @@
                         }
                     }
                 }
-            ],
-            language: {
-                lengthMenu: "Mostrar _MENU_",
-                search: "Filtrar:",
-                zeroRecords: "No se encontraron registros",
-                info: "Total de registros _TOTAL_ ",
-                infoEmpty: "No hay registros",
-                infoFiltered: "(_TOTAL_ filtrados de _MAX_ registros)",
-                oPaginate: {
-                    sFirst: "Primero",
-                    sLast: "Último",
-                    sNext: "Siguiente",
-                    sPrevious: "Anterior"
-                }
-            }
-        });
-    </script>
-    <script>
-        $('#usuarios_roles_datatable').DataTable({
-            processing: true,
-            serverSide: true,
-            ordering: false,
-            searching: false,
-            responsive: true,
-            scrollX: true,
-            ajax: {
-                url: "/usuarios_roles/datatable_json",
-                type: "POST",
-                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-                dataType: "json",
-                dataSrc: "data",
-                data: {"estatus": "A", "rol_id": {{ rol.id }} }
-            },
-            columns: [
+            ];
+            $('#permisos_datatable').DataTable(configDataTable);
+        </script>
+    {% endif %}
+    {% if current_user.can_view('USUARIOS ROLES') %}
+        <script>
+            configDataTable['ajax']['url'] = '/usuarios_roles/datatable_json';
+            configDataTable['ajax']['data'] = { 'estatus': "A", 'rol_id': {{ rol.id}} };
+            configDataTable['columns'] = [
                 { data: "detalle" },
                 { data: "usuario" },
                 { data: "usuario_nombre" },
                 { data: "usuario_puesto" }
-            ],
-            columnDefs: [
+            ];
+            configDataTable['columnDefs'] = [
                 {
-                    targets: 0,
+                    targets: 0, // detalle
                     data: null,
                     render: function(data, type, row, meta) {
                         return '<a href="' + data.url + '">' + data.id + '</a>';
                     }
                 },
                 {
-                    targets: 1,
+                    targets: 1, // usuario
                     data: null,
                     render: function(data, type, row, meta) {
                         if (data.url == '') {
@@ -154,29 +116,9 @@
                             return '<a href="' + data.url + '">' + data.email + '</a>';
                         }
                     }
-                },
-                {
-                    targets: [2, 3],
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        return (data.length > 32 ? data.substr(0, 32) + '…' : data);
-                    }
                 }
-            ],
-            language: {
-                lengthMenu: "Mostrar _MENU_",
-                search: "Filtrar:",
-                zeroRecords: "No se encontraron registros",
-                info: "Total de registros _TOTAL_ ",
-                infoEmpty: "No hay registros",
-                infoFiltered: "(_TOTAL_ filtrados de _MAX_ registros)",
-                oPaginate: {
-                    sFirst: "Primero",
-                    sLast: "Último",
-                    sNext: "Siguiente",
-                    sPrevious: "Anterior"
-                }
-            }
-        });
-    </script>
+            ];
+            $('#usuarios_roles_datatable').DataTable(configDataTable);
+        </script>
+    {% endif %}
 {% endblock %}

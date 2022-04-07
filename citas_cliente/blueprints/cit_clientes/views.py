@@ -86,8 +86,8 @@ def new():
         try:
             validacion = _validar_new_cliente(form)
         except Exception as err:
-            flash(f"Creación del nuevo Cliente incorrecto. {str(err)}", "warning")
-            validacion = False
+            flash(f"{err}", "warning")
+            return render_template("cit_clientes/register_msg.jinja2", registro=False)
 
         if validacion:
             cliente = CitCliente(
@@ -102,7 +102,7 @@ def new():
                 renovacion_fecha=date.today() + relativedelta(months=12),
             )
             cliente.save()
-            return redirect(url_for("cit_clientes.login"))
+            return render_template("cit_clientes/register_msg.jinja2", registro=True)
     return render_template("cit_clientes/new.jinja2", form=form)
 
 
@@ -114,5 +114,8 @@ def _validar_new_cliente(form: ClienteNewForm):
         raise Exception("Las claves CURP no coinciden.")
     if form.email.data != form.email_repetir.data:
         raise Exception("Los e-mails no coinciden.")
+    email_repetido = CitCliente.query.filter(CitCliente.email == form.email.data).first()
+    if email_repetido:
+        raise Exception("Ese e-mail ya está registrado.")
 
     return True

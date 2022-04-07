@@ -11,7 +11,8 @@
 *.yaml
 __pycache__/
 .ipynb_checkpoints/
+/.bashrc
+/setup.cfg
 /instance/settings.py
 /seed/
-/setup.cfg
 /venv/
