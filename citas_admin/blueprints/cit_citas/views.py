@@ -1,21 +1,26 @@
 """
-Citas, vistas
+Cit Citas, vistas
 """
 import json
-
-from flask import Blueprint, request, render_template, url_for
+from flask import Blueprint, render_template, request, url_for
 from flask_login import login_required
 
 from lib.datatables import get_datatable_parameters, output_datatable_json
 
 from citas_admin.blueprints.cit_citas.models import CitCita
-from citas_admin.blueprints.cit_citas_expedientes.models import CitCitaExpediente
 from citas_admin.blueprints.permisos.models import Permiso
 from citas_admin.blueprints.usuarios.decorators import permission_required
 
 MODULO = "CIT CITAS"
 
 cit_citas = Blueprint("cit_citas", __name__, template_folder="templates")
+
+
+@cit_citas.before_request
+@login_required
+@permission_required(MODULO, Permiso.VER)
+def before_request():
+    """Permiso por defecto"""
 
 
 @cit_citas.route("/cit_citas/datatable_json", methods=["GET", "POST"])
@@ -29,15 +34,14 @@ def datatable_json():
         consulta = consulta.filter_by(estatus=request.form["estatus"])
     else:
         consulta = consulta.filter_by(estatus="A")
-
-    registros = consulta.order_by(CitCita.inicio_tiempo.desc()).offset(start).limit(rows_per_page).all()
+    registros = consulta.order_by(CitCita.id.desc()).offset(start).limit(rows_per_page).all()
     total = consulta.count()
     # Elaborar datos para DataTable
     data = []
     for cita in registros:
         data.append(
             {
-                "id": {
+                "detalle": {
                     "id": cita.id,
                     "url": url_for("cit_citas.detail", cita_id=cita.id),
                 },
@@ -51,40 +55,30 @@ def datatable_json():
 
 
 @cit_citas.route("/cit_citas")
-@login_required
-@permission_required(MODULO, Permiso.VER)
 def list_active():
     """Listado de Citas activas"""
-    activos = CitCita.query.filter(CitCita.estatus == "A").all()
     return render_template(
         "cit_citas/list.jinja2",
-        citas=activos,
+        filtros=json.dumps({"estatus": "A"}),
         titulo="Citas",
         estatus="A",
-        filtros=json.dumps({"estatus": "A"}),
     )
 
 
 @cit_citas.route("/cit_citas/inactivos")
-@login_required
 @permission_required(MODULO, Permiso.MODIFICAR)
 def list_inactive():
-    """Listado de Cliente inactivos"""
-    inactivos = CitCita.query.filter(CitCita.estatus == "B").all()
+    """Listado de Citas inactivas"""
     return render_template(
-        "cit_clientes/list.jinja2",
-        clientes=inactivos,
+        "cit_citas/list.jinja2",
+        filtros=json.dumps({"estatus": "B"}),
         titulo="Citas inactivas",
         estatus="B",
-        filtros=json.dumps({"estatus": "B"}),
     )
 
 
-@cit_citas.route("/cit_citas/<int:cita_id>")
-@login_required
-@permission_required(MODULO, Permiso.VER)
-def detail(cita_id):
+@cit_citas.route("/cit_citas/<int:cit_cita_id>")
+def detail(cit_cita_id):
     """Detalle de una Cita"""
-    cita = CitCita.query.get_or_404(cita_id)
-    expedientes = CitCitaExpediente.query.filter(CitCitaExpediente.cita == cita).all()
-    return render_template("cit_citas/detail.jinja2", cita=cita, expedientes=expedientes)
+    cit_cita = CitCita.query.get_or_404(cit_cita_id)
+    return render_template("cit_citas/detail.jinja2", cit_cita=cit_cita)
