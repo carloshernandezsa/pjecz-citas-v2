@@ -46,37 +46,25 @@
         {% if modulo.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', 'Recuperar a ' + modulo.nombre + '?') }}{% endif %}
     {% endif %}
     {{ modals.custom_javascript('Eliminar', '¿Eliminar ese permiso del rol?', 'DeletePermiso') }}
-    <script>
-        $('#permisos_datatable').DataTable({
-            processing: true,
-            serverSide: true,
-            ordering: false,
-            searching: false,
-            responsive: true,
-            scrollX: true,
-            ajax: {
-                url: "/permisos/datatable_json",
-                type: "POST",
-                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-                dataType: "json",
-                dataSrc: "data",
-                data: {"estatus": "A", "modulo_id": {{ modulo.id }} }
-            },
-            columns: [
+    {{ detail.config_datatable() }}
+    {% if current_user.can_view('PERMISOS') %}
+        <script>
+            configDataTable['ajax']['url'] = '/permisos/datatable_json';
+            configDataTable['ajax']['data'] = { 'estatus': "A", 'modulo_id': {{ modulo.id}} };
+            configDataTable['columns'] = [
                 { data: "detalle" },
-                { data: "nivel" },
                 { data: "rol" }
-            ],
-            columnDefs: [
+            ];
+            configDataTable['columnDefs'] = [
                 {
-                    targets: 0,
+                    targets: 0, // detalle
                     data: null,
                     render: function(data, type, row, meta) {
                         return '<a href="' + data.url + '">' + data.nombre + '</a>';
                     }
                 },
                 {
-                    targets: 2,
+                    targets: 1, // rol
                     data: null,
                     render: function(data, type, row, meta) {
                         if (data.url == '') {
@@ -86,21 +74,8 @@
                         }
                     }
                 }
-            ],
-            language: {
-                lengthMenu: "Mostrar _MENU_",
-                search: "Filtrar:",
-                zeroRecords: "No se encontraron registros",
-                info: "Total de registros _TOTAL_ ",
-                infoEmpty: "No hay registros",
-                infoFiltered: "(_TOTAL_ filtrados de _MAX_ registros)",
-                oPaginate: {
-                    sFirst: "Primero",
-                    sLast: "Último",
-                    sNext: "Siguiente",
-                    sPrevious: "Anterior"
-                }
-            }
-        });
-    </script>
+            ];
+            $('#permisos_datatable').DataTable(configDataTable);
+        </script>
+    {% endif %}
 {% endblock %}

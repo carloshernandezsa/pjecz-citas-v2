@@ -43,29 +43,15 @@
         {{ detail.label_value('Teléfono celular', usuario.telefono_celular) }}
         {{ detail.label_value('Creado', moment(usuario.creado).format('llll')) }}
     {% endcall %}
-    {% if current_user.can_view('ROLES') %}
-        {% call detail.card("Roles") %}
-            <table id="roles_datatable" class="table display nowrap" style="width:100%">
+    {% if current_user.can_view('USUARIOS ROLES') %}
+        {% call detail.card() %}
+            <table id="usuarios_roles_datatable" class="table display nowrap init_tabs" style="width:100%;">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Rol</th>
-                        <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                {% for usuario_rol in usuario.usuarios_roles %}
-                    {% if usuario_rol.estatus == "A" %}
-                    <tr>
-                        <td><a href="{{ url_for('roles.detail', rol_id=usuario_rol.rol_id) }}">{{ usuario_rol.rol.nombre }}</a></td>
-                        <td>
-                        {% if current_user.can_edit('USUARIOS ROLES') %}
-                            {{ modals.button_delete(url=url_for('usuarios_roles.delete', usuario_rol_id=usuario_rol.id), id='DeleteRolUsuario', message='¿Eliminar ' + usuario_rol.rol.nombre + '?') }}
-                        {% endif %}
-                        </td>
-                    </tr>
-                    {% endif %}
-                {% endfor %}
-                </tbody>
             </table>
             {% if current_user.can_insert('USUARIOS ROLES') %}
                 <a href="{{ url_for('usuarios_roles.new_with_usuario', usuario_id=usuario.id) }}" class="btn btn-primary">Agregar</a>
@@ -79,7 +65,37 @@
         {% if usuario.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar a ' + usuario.nombre + '?') }}{% endif %}
         {% if usuario.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + usuario.nombre + '?') }}{% endif %}
     {% endif %}
+    {{ detail.config_datatable() }}
+    {% if current_user.can_view('USUARIOS ROLES') %}
+        <script>
+            configDataTable['ajax']['url'] = '/usuarios_roles/datatable_json';
+            configDataTable['ajax']['data'] = { 'estatus': "A", 'usuario_id': {{ usuario.id}} };
+            configDataTable['columns'] = [
+                { data: "detalle" },
+                { data: "rol" }
+            ];
+            configDataTable['columnDefs'] = [
+                {
+                    targets: 0, // detalle
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return '<a href="' + data.url + '">' + data.id + '</a>';
+                    }
+                },
+                {
+                    targets: 1, // rol
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        if (data.url == '') {
+                            return data.nombre;
+                        } else {
+                            return '<a href="' + data.url + '">' + data.nombre + '</a>';
+                        }
+                    }
+                }
+            ];
+            $('#usuarios_roles_datatable').DataTable(configDataTable);
+        </script>
+    {% endif %}
     {{ detail.moment_js(moment) }}
-    {{ detail.datatable('roles_datatable') }}
-    {{ modals.custom_javascript('Eliminar', '¿Eliminar ese rol del usuario?', 'DeleteRolUsuario') }}
 {% endblock %}
