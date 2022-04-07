@@ -28,7 +28,7 @@ class CitCliente(db.Model, UserMixin, UniversalMixin):
     renovacion_fecha = db.Column(db.Date(), nullable=False)
 
     # Hijos
-    # cit_citas = db.relationship("CitCita", back_populates="cit_cliente")
+    cit_citas = db.relationship("CitCita", back_populates="cit_cliente")
 
     @property
     def nombre(self):

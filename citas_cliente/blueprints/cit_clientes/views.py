@@ -3,10 +3,10 @@ CitClientes, vistas
 """
 import os
 import re
-from datetime import date
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from lib.pwgen import generar_contrasena
-
+from pytz import timezone
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
@@ -67,7 +67,14 @@ def logout():
 @login_required
 def profile():
     """Mostrar el Perfil"""
-    return render_template("login/profile.jinja2")
+    ahora_utc = datetime.now(timezone("UTC"))
+    ahora_mx_coah = ahora_utc.astimezone(timezone("America/Mexico_City"))
+    formato_fecha = "%Y-%m-%d"
+    return render_template(
+        "login/profile.jinja2",
+        ahora_utc_str=ahora_utc.strftime(formato_fecha),
+        ahora_mx_coah_str=ahora_mx_coah.strftime(formato_fecha),
+    )
 
 
 @cit_cliente.route("/nuevo_registro", methods=["GET", "POST"])

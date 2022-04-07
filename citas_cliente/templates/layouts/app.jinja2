@@ -22,8 +22,13 @@
     </header>
     <!-- Container -->
     <div class="container-fluid h-100">
-        {{ flash.render() }}
-        {% block content %}{% endblock %}
+        <strong>{{ usuario_email }}</strong>
+
+        <main class="col-md-11 ms-sm-auto col-lg-12 px-md-4">
+            {% block topbar_actions %}{% endblock %}
+            {{ flash.render() }}
+            {% block content %}{% endblock %}
+        </main>
     </div>
 {% endblock %}
 
