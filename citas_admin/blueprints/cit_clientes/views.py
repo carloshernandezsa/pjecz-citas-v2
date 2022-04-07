@@ -41,19 +41,19 @@ def datatable_json():
         consulta = consulta.filter(CitCliente.curp.contains(safe_string(request.form["curp"])))
     if "email" in request.form:
         consulta = consulta.filter(CitCliente.email.contains(request.form["email"]))
-    registros = consulta.order_by(CitCliente.email.desc()).offset(start).limit(rows_per_page).all()
+    registros = consulta.order_by(CitCliente.id.desc()).offset(start).limit(rows_per_page).all()
     total = consulta.count()
     # Elaborar datos para DataTable
     data = []
     for cliente in registros:
         data.append(
             {
-                "email": {
+                "detalle": {
                     "id": cliente.id,
                     "url": url_for("cit_clientes.detail", cliente_id=cliente.id),
-                    "descripcion": cliente.email,
                 },
-                "nombre_completo": cliente.nombre,
+                "nombre": cliente.nombre,
+                "email": cliente.email,
             }
         )
     # Entregar JSON
@@ -64,7 +64,7 @@ def datatable_json():
 @login_required
 @permission_required(MODULO, Permiso.VER)
 def list_active():
-    """Listado de Cliente activos"""
+    """Listado de Clientes activos"""
     return render_template(
         "cit_clientes/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
@@ -77,7 +77,7 @@ def list_active():
 @login_required
 @permission_required(MODULO, Permiso.MODIFICAR)
 def list_inactive():
-    """Listado de Cliente inactivos"""
+    """Listado de Clientes inactivos"""
     return render_template(
         "cit_clientes/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
