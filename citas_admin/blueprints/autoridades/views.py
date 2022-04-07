@@ -70,7 +70,7 @@ def datatable_json():
                 "materia": {
                     "nombre": resultado.materia.nombre,
                     "url": url_for("materias.detail", materia_id=resultado.materia_id) if current_user.can_view("MATERIAS") else "",
-                }
+                },
             }
         )
     # Entregar JSON

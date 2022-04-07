@@ -15,6 +15,7 @@ NUMERO_PUBLICACION_REGEXP = r"^\d+/[12]\d\d\d$"
 SENTENCIA_REGEXP = r"^\d+/[12]\d\d\d$"
 URL_REGEXP = r"^(https?:\/\/)[0-9a-z-_]*(\.[0-9a-z-_]+)*(\.[a-z]+)+(\/[0-9a-z%-_]*)*?\/?$"
 
+
 def safe_clave(input_str, max_len=16):
     """Safe clave"""
     if not isinstance(input_str, str):
@@ -127,6 +128,7 @@ def safe_sentencia(input_str):
     if len(limpio) > 16:
         raise ValueError
     return limpio
+
 
 def safe_url(input_str):
     """Safe URL"""
