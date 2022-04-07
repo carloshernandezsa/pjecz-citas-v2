@@ -27,11 +27,10 @@
     {% endcall %}
 {% endblock %}
 
-
 {% block custom_javascript %}
     <!-- Select2 bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+    <!-- AJAX -->
     <script>
     $(document).ready(function() {
         $('#oficina_id').addClass('js-example-placeholder-single js-states form-control');
@@ -39,7 +38,6 @@
         let newOption = new Option('{{hora_bloqueada.oficina.clave}} — {{hora_bloqueada.oficina.descripcion_corta}}', '{{hora_bloqueada.oficina_id}}', false, false);
         $('#oficina_id').append(newOption).trigger('change');
         $(".js-example-placeholder-single").select2({
-            // --- Carga de emails por Ajax --- //
             ajax: {
                 url: '/cit_horas_bloqueadas/oficinas',
                 headers: { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
