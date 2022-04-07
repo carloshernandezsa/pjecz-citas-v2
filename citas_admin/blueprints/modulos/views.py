@@ -2,6 +2,7 @@
 Modulos, vistas
 """
 import json
+
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
@@ -99,7 +100,7 @@ def new():
         else:
             modulo = Modulo(
                 nombre=nombre,
-                nombre_corto=form.nombre_corto.data,
+                nombre_corto=safe_string(form.nombre_corto.data, to_uppercase=False, do_unidecode=False),
                 icono=form.icono.data,
                 ruta=form.ruta.data,
                 en_navegacion=form.en_navegacion.data == 1,
@@ -135,7 +136,7 @@ def edit(modulo_id):
         # Si es valido actualizar
         if es_valido:
             modulo.nombre = nombre
-            modulo.nombre_corto = safe_string(form.nombre_corto.data)
+            modulo.nombre_corto = safe_string(form.nombre_corto.data, to_uppercase=False, do_unidecode=False)
             modulo.icono = form.icono.data
             modulo.ruta = form.ruta.data
             modulo.en_navegacion = form.en_navegacion.data == 1

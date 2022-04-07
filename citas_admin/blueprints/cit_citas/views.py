@@ -5,13 +5,13 @@ import json
 
 from flask import Blueprint, request, render_template, url_for
 from flask_login import login_required
-from lib.datatables import get_datatable_parameters, output_datatable_json
 
-from citas_admin.blueprints.permisos.models import Permiso
-from citas_admin.blueprints.usuarios.decorators import permission_required
+from lib.datatables import get_datatable_parameters, output_datatable_json
 
 from citas_admin.blueprints.cit_citas.models import CitCita
 from citas_admin.blueprints.cit_citas_expedientes.models import CitCitaExpediente
+from citas_admin.blueprints.permisos.models import Permiso
+from citas_admin.blueprints.usuarios.decorators import permission_required
 
 MODULO = "CIT CITAS"
 

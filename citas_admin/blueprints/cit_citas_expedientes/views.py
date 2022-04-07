@@ -5,17 +5,16 @@ import json
 
 from flask import Blueprint, request, render_template, url_for
 from flask_login import login_required
+
 from lib import datatables
-
 from lib.safe_string import safe_string
-
-from citas_admin.blueprints.permisos.models import Permiso
-from citas_admin.blueprints.usuarios.decorators import permission_required
 
 from citas_admin.blueprints.cit_citas_expedientes.models import CitCitaExpediente
 from citas_admin.blueprints.cit_citas_expedientes.forms import CitCitaExpedienteSearchForm
 from citas_admin.blueprints.bitacoras.models import Bitacora
 from citas_admin.blueprints.modulos.models import Modulo
+from citas_admin.blueprints.permisos.models import Permiso
+from citas_admin.blueprints.usuarios.decorators import permission_required
 
 MODULO = "CIT EXPEDIENTES"
 

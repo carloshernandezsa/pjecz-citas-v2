@@ -9,13 +9,12 @@ from flask_login import current_user, login_required
 
 from lib.safe_string import safe_message, safe_string
 
-from citas_admin.blueprints.permisos.models import Permiso
-from citas_admin.blueprints.usuarios.decorators import permission_required
-
 from citas_admin.blueprints.bitacoras.models import Bitacora
 from citas_admin.blueprints.cit_dias_inhabiles.models import CitDiaInhabil
 from citas_admin.blueprints.cit_dias_inhabiles.forms import CitDiasInhabilesForm
 from citas_admin.blueprints.modulos.models import Modulo
+from citas_admin.blueprints.permisos.models import Permiso
+from citas_admin.blueprints.usuarios.decorators import permission_required
 
 MODULO = "CIT DIAS INHABILES"
 MESES_FUTUROS = 12  # Un año a futuro, para las fechas

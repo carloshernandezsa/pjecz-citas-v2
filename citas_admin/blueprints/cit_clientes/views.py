@@ -9,11 +9,10 @@ from flask_login import login_required
 from lib.datatables import get_datatable_parameters, output_datatable_json
 from lib.safe_string import safe_string
 
-from citas_admin.blueprints.permisos.models import Permiso
-from citas_admin.blueprints.usuarios.decorators import permission_required
-
 from citas_admin.blueprints.cit_clientes.models import CitCliente
 from citas_admin.blueprints.cit_clientes.forms import CitClienteSearchForm
+from citas_admin.blueprints.permisos.models import Permiso
+from citas_admin.blueprints.usuarios.decorators import permission_required
 
 MODULO = "CIT CLIENTES"
 RENOVACION_CONTRASENA_DIAS = 360

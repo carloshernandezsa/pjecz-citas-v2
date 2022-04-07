@@ -2,7 +2,6 @@
 Autoridades, vistas
 """
 import json
-from datetime import date, datetime, timedelta
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
@@ -71,7 +70,7 @@ def datatable_json():
                 "materia": {
                     "nombre": resultado.materia.nombre,
                     "url": url_for("materias.detail", materia_id=resultado.materia_id) if current_user.can_view("MATERIAS") else "",
-                }
+                },
             }
         )
     # Entregar JSON

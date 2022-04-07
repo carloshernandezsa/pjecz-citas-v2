@@ -5,22 +5,19 @@ import json
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from sqlalchemy import or_
-
 from flask import Blueprint, flash, redirect, render_template, url_for, request
 from flask_login import current_user, login_required
+from sqlalchemy import or_
 
 from lib.safe_string import safe_message, safe_string
-
-from citas_admin.blueprints.permisos.models import Permiso
-from citas_admin.blueprints.usuarios.decorators import permission_required
 
 from citas_admin.blueprints.bitacoras.models import Bitacora
 from citas_admin.blueprints.cit_horas_bloqueadas.models import CitHoraBloqueada
 from citas_admin.blueprints.cit_horas_bloqueadas.forms import CitHoraBloqueadaForm
 from citas_admin.blueprints.modulos.models import Modulo
-
 from citas_admin.blueprints.oficinas.models import Oficina
+from citas_admin.blueprints.permisos.models import Permiso
+from citas_admin.blueprints.usuarios.decorators import permission_required
 
 MODULO = "CIT HORAS BLOQUEADAS"
 MESES_FUTUROS = 12  # Un año a futuro, para las fechas

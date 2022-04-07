@@ -19,8 +19,7 @@ from citas_admin.blueprints.usuarios.decorators import anonymous_required
 from citas_cliente.blueprints.cit_clientes.models import CitCliente
 from citas_cliente.blueprints.cit_clientes.forms import AccesoForm, ClienteNewForm
 
-
-MODULO = "CIT CLIENTE"
+MODULO = "CIT CLIENTES"
 
 cit_cliente = Blueprint("cit_clientes", __name__, template_folder="templates")
 
