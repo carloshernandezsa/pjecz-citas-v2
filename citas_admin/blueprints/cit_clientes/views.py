@@ -20,6 +20,13 @@ RENOVACION_CONTRASENA_DIAS = 360
 cit_clientes = Blueprint("cit_clientes", __name__, template_folder="templates")
 
 
+@cit_clientes.before_request
+@login_required
+@permission_required(MODULO, Permiso.VER)
+def before_request():
+    """Permiso por defecto"""
+
+
 @cit_clientes.route("/cit_clientes/datatable_json", methods=["GET", "POST"])
 def datatable_json():
     """DataTable JSON para listado de clientes"""

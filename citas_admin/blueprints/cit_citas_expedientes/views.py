@@ -60,7 +60,7 @@ def datatable_json():
 def list_active():
     """Listado de Expedientes activos"""
     return render_template(
-        "cit_cita_expediente/list.jinja2",
+        "cit_citas_expedientes/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="Expedientes",
         estatus="A",
@@ -72,7 +72,7 @@ def list_active():
 def list_inactive():
     """Listado de Expedientes inactivos"""
     return render_template(
-        "cit_cita_expedientes/list.jinja2",
+        "cit_citas_expedientes/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
         titulo="Expedientes inactivos",
         estatus="B",
