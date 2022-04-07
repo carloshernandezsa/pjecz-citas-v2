@@ -1,8 +1,14 @@
 """
-Google Cloud App Engine toma main.py
+Google Cloud App Engine
 """
-from citas_backend import app
+import os
 
+
+# Decidir entre arrancar el sistema para el cliente o para administracion
+if os.environ.get("FLASK_APP", "citas_admin/app.py") == "citas_admin/app.py":
+    from citas_admin import app
+else:
+    from citas_cliente import app
 app = app.create_app()
 
 
