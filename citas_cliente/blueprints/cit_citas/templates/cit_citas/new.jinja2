@@ -1,0 +1,35 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/form.jinja2' as f with context %}
+{% import 'macros/topbar.jinja2' as topbar %}
+{% import 'macros/quill.jinja2' as quill %}
+
+{% block title %}Nuevo Procedimiento{% endblock %}
+
+{% block topbar_actions %}
+    {{ topbar.page('Nuevo Procedimiento') }}
+{% endblock %}
+
+{% block content %}
+    {% call f.card() %}
+        <div><form></form></div>
+        <div class="multisteps-form">
+            <!-- Steps Progress Bar -->
+            <div class="row">
+                <div class="col-lg-12 ml-auto mr-auto mb-4">
+                    <div class="multisteps-form__progress">
+                        <button class="multisteps-form__progress-btn js-active" type="button" title="Encabezado" style="font-size:12px" disabled>Encabezado</button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Objetivo" style="font-size:12px" disabled>Objetivo</button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Alcance" style="font-size:12px" disabled>Alcance</button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Documentos" style="font-size:12px" disabled>Documentos</button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Definiciones" style="font-size:12px" disabled>Definiciones</button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Responsabilidades" style="font-size:12px" disabled>Responsabilidades</button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Desarrollo" style="font-size:12px" disabled>Desarrollo</button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Registros" style="font-size:12px" disabled>Registros</button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Control de Cambios" style="font-size:12px" disabled>Control de Cambios</button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Autorizaciones" style="font-size:12px" disabled>Autorizaciones</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Steps Form Panels -->
+    {% endcall %}
+{% endblock %}
