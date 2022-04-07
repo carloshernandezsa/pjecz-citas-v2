@@ -27,7 +27,7 @@ def before_request():
 def list_active():
     """Listado de Citas activos"""
     return render_template(
-        "cit_citas/list.jinja2",
+        "cit_citas/list_active.jinja2",
         filtros=json.dumps({"estatus": "A"}),
         titulo="Citas",
         estatus="A",
@@ -45,15 +45,27 @@ def list_inactive():
     )
 
 
+@cit_citas.route("/cit_citas/<int:cit_cita_id>")
+def detail(cit_cita_id):
+    """Detalle de un Citas"""
+    cit_cita = CitCita.query.get_or_404(cit_cita_id)
+    return render_template("cit_citas/detail.jinja2", cit_cita=cit_cita)
+
+
 @cit_citas.route("/cit_citas/nuevo", methods=["GET", "POST"])
 def new():
     """Nuevo citas"""
     form = CitCitaForm()
     if form.validate_on_submit():
         cit_cita = CitCita(
-            nombre=safe_string(form.nombre.data),
+            distritos=safe_string(form.distritos.data),
+            juzgados=safe_string(form.juzgados.data),
+            tipo_tramite=safe_string(form.tipo_tramite.data),
+            indicaciones_tramite=safe_string(form.indicaciones_tramite.data),
+            # fecha=form.fecha.data,
+            # hora=form.hora.data,
         )
         cit_cita.save()
         flash("Datos incorrectos.", "warning")
-        redirect(url_for("cit_citas.list_active"))
+        redirect(url_for("cit_citas.detail", cit_cita=cit_cita.id))
     return render_template("cit_citas/new.jinja2", form=form)

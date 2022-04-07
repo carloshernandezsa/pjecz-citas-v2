@@ -1,0 +1,33 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Cita{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons(cit_cita.distritos) %}
+        {{ topbar.button_previous('Citas', url_for('cit_citas.list_active')) }}
+        {% if current_user.can_edit('Nueva Citas') %}
+            {{ topbar.button_edit('Editar', url_for('cit_citas.edit', cit_cita_id=cit_cita.id)) }}
+            {% if cit_cita.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('cit_citas.delete', cit_cita_id=cit_cita.id)) }}{% endif %}
+            {% if cit_cita.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('cit_citas.recover', cit_cita_id=cit_cita.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=cit_cita.estatus) %}
+        {{ detail.label_value_big('Distrito Judicial', cit_cita.distritos) }}
+        {{ detail.label_value('Juzgado o unidad administrativa', cit_cita.juzgados) }}
+        {{ detail.label_value('Tipo de tramite', cit_cita.tipo_tramite) }}
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_edit('Nueva Citas') %}
+        {% if cit_cita.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar a ' + cit_cita.distritos + '?') }}{% endif %}
+        {% if cit_cita.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + cit_cita.distritos + '?') }}{% endif %}
+    {% endif %}
+    {{ detail.moment_js(moment) }}
+{% endblock %}

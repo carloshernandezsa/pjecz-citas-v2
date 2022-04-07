@@ -1,12 +1,16 @@
 {% extends 'layouts/app.jinja2' %}
 {% import 'macros/form.jinja2' as f with context %}
 {% import 'macros/topbar.jinja2' as topbar %}
-{% import 'macros/quill.jinja2' as quill %}
+{% import 'macros/step.jinja2' as step %}
 
-{% block title %}Nuevo Procedimiento{% endblock %}
+{% block title %}Nueva cita{% endblock %}
+
+{% block custom_head %}
+    <link href="{{ url_for('static', filename='css/steper.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
 
 {% block topbar_actions %}
-    {{ topbar.page('Nuevo Procedimiento') }}
+    {{ topbar.page('Nueva cita') }}
 {% endblock %}
 
 {% block content %}
@@ -17,19 +21,62 @@
             <div class="row">
                 <div class="col-lg-12 ml-auto mr-auto mb-4">
                     <div class="multisteps-form__progress">
-                        <button class="multisteps-form__progress-btn js-active" type="button" title="Encabezado" style="font-size:12px" disabled>Encabezado</button>
-                        <button class="multisteps-form__progress-btn" type="button" title="Objetivo" style="font-size:12px" disabled>Objetivo</button>
-                        <button class="multisteps-form__progress-btn" type="button" title="Alcance" style="font-size:12px" disabled>Alcance</button>
-                        <button class="multisteps-form__progress-btn" type="button" title="Documentos" style="font-size:12px" disabled>Documentos</button>
-                        <button class="multisteps-form__progress-btn" type="button" title="Definiciones" style="font-size:12px" disabled>Definiciones</button>
-                        <button class="multisteps-form__progress-btn" type="button" title="Responsabilidades" style="font-size:12px" disabled>Responsabilidades</button>
-                        <button class="multisteps-form__progress-btn" type="button" title="Desarrollo" style="font-size:12px" disabled>Desarrollo</button>
-                        <button class="multisteps-form__progress-btn" type="button" title="Registros" style="font-size:12px" disabled>Registros</button>
-                        <button class="multisteps-form__progress-btn" type="button" title="Control de Cambios" style="font-size:12px" disabled>Control de Cambios</button>
-                        <button class="multisteps-form__progress-btn" type="button" title="Autorizaciones" style="font-size:12px" disabled>Autorizaciones</button>
+                        <button class="multisteps-form__progress-btn js-active" type="button" title="Distritos" style="font-size:12px" disabled>Distritos y Juzgados</button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Tipo de Tramite" style="font-size:12px" disabled>Tipo de tramite </button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Fecha y Hora" style="font-size:12px" disabled>Fecha y Hora</button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Detalle cita" style="font-size:12px" disabled>Detalle de la cita</button>
+                        <button class="multisteps-form__progress-btn" type="button" title="Confirmar cita" style="font-size:12px" disabled>Confirmar cita</button>
                     </div>
                 </div>
             </div>
             <!-- Steps Form Panels -->
+             <!-- Steps Form Panels -->
+            <div class="row">
+                <div class="col-lg-12 m-auto">
+                    {% call f.form_tag('cit_citas.new', fid='cit_cita_form', css_class='multisteps-form__form') %}
+                        <!-- Distritos y Juzgados -->
+                        {% call step.step_first('Distritos y Juzgados', next_onclick='javascript:guardar_distritos()') %}
+                            {% call f.form_group(form.distritos) %}{% endcall %}
+                            {% call f.form_group(form.juzgados) %}{% endcall %}
+                        {% endcall %}
+                        <!-- Step tipo tramite -->
+                        {% call step.step('Tipo de tramite', back_onclick='javascript:guardar_tramite()', next_onclick='javascript:guardar_tramite()', save_onclick='guardar_tramite()') %}
+                            {% call f.form_group(form.tipo_tramite) %}{% endcall %}
+                            {% call f.form_group(form.indicaciones_tramite) %}{% endcall %}
+                        {% endcall %}
+                        <!-- Step Fecha y Hora  -->
+                        {% call step.step('Fecha y Hora', back_onclick='javascript:guardar_fecha()', next_onclick='javascript:guardar_fecha()', save_onclick='javascript:guardar_fecha()') %}
+                            <h4>Aquí se pondra el calendario para poder agendar la cita junto con sus horarios disponibles</h4>
+                        {% endcall %}
+                        <!-- Step Detalle cita -->
+                        {% call step.step('Detalle de la cita', back_onclick='javascript:guardar_detalle_cita()', next_onclick='javascript:guardar_detalle_cita()', save_onclick='javascript:guardar_detalle_cita()') %}
+                            <label><strong>Distrito judicial</strong></label>
+                            <input type="text" id="distrito_r" class="form-control" value="" readonly/>
+                            <label><strong>Juzgado o Unidad Administrativa</strong></label>
+                            <input type="text" id="juzgado_r" class="form-control" value="" readonly/>
+                            <label><strong>Tipo de tramite</strong></label>
+                            <input type="text" id="tipo_tramite_r" class="form-control" value="" readonly/>
+                            <label><strong>Indicaciones del tramite</strong></label>
+                            <input type="text" id="indicaciones_tramite_r" class="form-control" value="" readonly/>
+                            {# <label><strong>Fecha</strong></label> #}
+                            {# <input type="text" id="fecha_r" class="form-control" value="" readonly/>
+                            <label><strong>Hora</strong></label>
+                            <input type="text" id="hora_r" class="form-control" value="" readonly/> #}
+                        {% endcall %}
+                        <!-- Step Confirmar cita -->
+                        {% call step.step_last('Confirmar cita', back_onclick='javascript:guardar_confirmar()') %}
+                            <h3>Su cita ha sido programada correctamente</h3>
+                            <p>Le agradecemos utilizar nuestro sistemas de citas en Línea, a continuación le proporciaremos los detalles de cnfirmación. Le sugerimos acudir a nuestra dsede con 10 minutos de anticipación para brindqarle un mejor servicio.</p>
+                            <p>A su ingreso debrá presentar una identificación oficial y este mensaje correo, ya sea impreso o en medio electronico.</p>
+                            <p>Si acude 10 minutos después de la hora señalada en esta confirmación no será posible garantizarle el servicio.</p>
+                        {% endcall %}
+                    {% endcall %}
+                </div>
+            </div>
+        </div>
     {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/cit_citas.js') }}"></script>
 {% endblock %}
