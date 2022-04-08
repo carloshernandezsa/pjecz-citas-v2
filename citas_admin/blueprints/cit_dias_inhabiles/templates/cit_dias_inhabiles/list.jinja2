@@ -6,12 +6,13 @@
 
 {% block topbar_actions %}
     {% call topbar.page_buttons(titulo) %}
-        {{ topbar.button_previous('Citas', url_for('cit_citas.list_active')) }}
         {% if current_user.can_edit('CIT DIAS INHABILES') %}
             {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('cit_dias_inhabiles.list_inactive')) }}{% endif %}
             {% if estatus == 'B' %}{{ topbar.button_list_active('Activos', url_for('cit_dias_inhabiles.list_active')) }}{% endif %}
         {% endif %}
+        {% if current_user.can_insert('CIT DIAS INHABILES') %}
             {{ topbar.button_new('Nuevo Día Inhábil', url_for('cit_dias_inhabiles.new')) }}
+        {% endif %}
     {% endcall %}
 {% endblock %}
 
@@ -24,18 +25,28 @@
                     <th>Descripción</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for dia_inhabil in dias_inhabiles %}
-                <tr>
-                    <td><a href="{{ url_for('cit_dias_inhabiles.detail', dia_inhabil_id=dia_inhabil.id) }}">{{ dia_inhabil.fecha }}</a></td>
-                    <td>{{ dia_inhabil.descripcion }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
         </table>
     {% endcall %}
 {% endblock %}
 
 {% block custom_javascript %}
-    {{ list.datatable('cit_dias_inhabiles_datatable') }}
+    {{ list.config_datatable() }}
+    <script>
+        configDataTable['ajax']['url'] = '/cit_dias_inhabiles/datatable_json';
+        configDataTable['ajax']['data'] = {{ filtros }};
+        configDataTable['columns'] = [
+            { data: 'detalle' },
+            { data: 'descripcion' },
+        ];
+        configDataTable['columnDefs'] = [
+            {
+                targets: 0, // detalle
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + moment(data.fecha).format("DD MMM YYYY") + '</a>';
+                }
+            }
+        ];
+        $('#cit_dias_inhabiles_datatable').DataTable(configDataTable);
+    </script>
 {% endblock %}
