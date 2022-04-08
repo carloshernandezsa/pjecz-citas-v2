@@ -6,7 +6,7 @@ from wtforms import StringField, SubmitField, DateField
 from wtforms.validators import DataRequired, Length, Optional
 
 
-class CitDiasInhabilesForm(FlaskForm):
+class CitDiaInhabilForm(FlaskForm):
     """Formulario CitDíasInhabiles"""
 
     fecha = DateField("Fecha", validators=[DataRequired()])
