@@ -21,7 +21,7 @@ def respaldar_cit_servicios(salida: str = "cit_servicios.csv"):
         respaldo = csv.writer(puntero)
         respaldo.writerow(
             [
-                "servicio_id",
+                "cit_servicio_id",
                 "clave",
                 "nombre",
                 "solicitar_expedientes",

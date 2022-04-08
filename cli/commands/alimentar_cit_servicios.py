@@ -14,7 +14,7 @@ ARCHIVO_CSV = "seed/cit_servicios.csv"
 
 
 def alimentar_cit_servicios():
-    """Alimentar Citas Servicios"""
+    """Alimentar Servicios de las Citas"""
     ruta = Path(ARCHIVO_CSV)
     if not ruta.exists():
         click.echo(f"AVISO: {ruta.name} no se encontró.")
@@ -22,12 +22,12 @@ def alimentar_cit_servicios():
     if not ruta.is_file():
         click.echo(f"AVISO: {ruta.name} no es un archivo.")
         return
-    click.echo("Alimentando Citas-Servicios...")
+    click.echo("Alimentando servicios de las citas...")
     contador = 0
     with open(ruta, encoding="utf-8") as puntero:
         rows = csv.DictReader(puntero)
         for row in rows:
-            servicio_id = int(row["servicio_id"])
+            servicio_id = int(row["cit_servicio_id"])
             if servicio_id != contador + 1:
                 click.echo(f"  AVISO: servicio_id {servicio_id} no es consecutivo")
                 continue
@@ -41,4 +41,4 @@ def alimentar_cit_servicios():
             contador += 1
             if contador % 100 == 0:
                 click.echo(f"  Van {contador}...")
-    click.echo(f"  {contador} Citas-Servicios alimentados")
+    click.echo(f"  {contador} servicios de las citas alimentados")
