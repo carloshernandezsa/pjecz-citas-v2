@@ -1,8 +1,8 @@
 """
 Cit Clientes
 
-- nueva_cliente: Crear un nuevo cliente
-- nueva_contrasena: Cambiar contraseña de un cliente
+- agregar: Agregar un nuevo cliente
+- cambiar_contrasena: Cambiar contraseña de un cliente
 """
 from datetime import datetime, timedelta
 import click
@@ -25,7 +25,7 @@ def cli():
 @click.command()
 @click.argument("email", type=str)
 def agregar(email):
-    """Crear un nuevo cliente"""
+    """Agregar un nuevo cliente"""
     # Validar que el email no exista
     if CitCliente.query.filter_by(email=email).first():
         click.echo(f"El email {email} ya existe")
