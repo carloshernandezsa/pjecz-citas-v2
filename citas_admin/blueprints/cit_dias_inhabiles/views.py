@@ -101,7 +101,7 @@ def new():
         if fecha < date.today():
             flash("La fecha no puede estar en el pasado.", "warning")
             es_valido = False
-        if fecha >  date.today() + timedelta(days=LIMITE_FUTURO_DIAS):
+        if fecha > date.today() + timedelta(days=LIMITE_FUTURO_DIAS):
             flash("La fecha sobrepasa el limite permitido.", "warning")
             es_valido = False
         if CitDiaInhabil.query.filter_by(fecha=fecha).first() is not None:
@@ -126,10 +126,10 @@ def new():
     return render_template("cit_dias_inhabiles/new.jinja2", form=form)
 
 
-@cit_dias_inhabiles.route('/cit_dias_inhabiles/edicion/<int:cit_dia_inhabil_id>', methods=['GET', 'POST'])
+@cit_dias_inhabiles.route("/cit_dias_inhabiles/edicion/<int:cit_dia_inhabil_id>", methods=["GET", "POST"])
 @permission_required(MODULO, Permiso.MODIFICAR)
 def edit(cit_dia_inhabil_id):
-    """ Editar Dia Inhabil """
+    """Editar Dia Inhabil"""
     cit_dia_inhabil = CitDiaInhabil.query.get_or_404(cit_dia_inhabil_id)
     form = CitDiaInhabilForm()
     if form.validate_on_submit():
@@ -139,7 +139,7 @@ def edit(cit_dia_inhabil_id):
         if fecha < date.today():
             flash("La fecha no puede estar en el pasado.", "warning")
             es_valido = False
-        if fecha >  date.today() + timedelta(days=LIMITE_FUTURO_DIAS):
+        if fecha > date.today() + timedelta(days=LIMITE_FUTURO_DIAS):
             flash("La fecha sobrepasa el limite permitido.", "warning")
             es_valido = False
         cit_dia_inhabil_posible = CitDiaInhabil.query.filter_by(fecha=fecha).first()
@@ -161,15 +161,15 @@ def edit(cit_dia_inhabil_id):
             flash(bitacora.descripcion, "success")
             return redirect(url_for("cit_dias_inhabiles.list_active"))
     form.descripcion.data = cit_dia_inhabil.descripcion
-    return render_template('cit_dias_inhabiles/edit.jinja2', form=form, cit_dia_inhabil=cit_dia_inhabil)
+    return render_template("cit_dias_inhabiles/edit.jinja2", form=form, cit_dia_inhabil=cit_dia_inhabil)
 
 
-@cit_dias_inhabiles.route('/cit_dias_inhabiles/eliminar/<int:cit_dia_inhabil_id>')
+@cit_dias_inhabiles.route("/cit_dias_inhabiles/eliminar/<int:cit_dia_inhabil_id>")
 @permission_required(MODULO, Permiso.MODIFICAR)
 def delete(cit_dia_inhabil_id):
-    """ Eliminar Dia Inhabil """
+    """Eliminar Dia Inhabil"""
     cit_dia_inhabil = CitDiaInhabil.query.get_or_404(cit_dia_inhabil_id)
-    if cit_dia_inhabil.estatus == 'A':
+    if cit_dia_inhabil.estatus == "A":
         cit_dia_inhabil.delete()
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
@@ -179,15 +179,15 @@ def delete(cit_dia_inhabil_id):
         )
         bitacora.save()
         flash(bitacora.descripcion, "success")
-    return redirect(url_for('cit_dias_inhabiles.detail', cit_dia_inhabil_id=cit_dia_inhabil.id))
+    return redirect(url_for("cit_dias_inhabiles.detail", cit_dia_inhabil_id=cit_dia_inhabil.id))
 
 
-@cit_dias_inhabiles.route('/cit_dias_inhabiles/recuperar/<int:cit_dia_inhabil_id>')
+@cit_dias_inhabiles.route("/cit_dias_inhabiles/recuperar/<int:cit_dia_inhabil_id>")
 @permission_required(MODULO, Permiso.MODIFICAR)
 def recover(cit_dia_inhabil_id):
-    """ Recuperar Dia Inhabil """
+    """Recuperar Dia Inhabil"""
     cit_dia_inhabil = CitDiaInhabil.query.get_or_404(cit_dia_inhabil_id)
-    if cit_dia_inhabil.estatus == 'B':
+    if cit_dia_inhabil.estatus == "B":
         cit_dia_inhabil.recover()
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
@@ -197,4 +197,4 @@ def recover(cit_dia_inhabil_id):
         )
         bitacora.save()
         flash(bitacora.descripcion, "success")
-    return redirect(url_for('cit_dias_inhabiles.detail', cit_dia_inhabil_id=cit_dia_inhabil.id))
+    return redirect(url_for("cit_dias_inhabiles.detail", cit_dia_inhabil_id=cit_dia_inhabil.id))
